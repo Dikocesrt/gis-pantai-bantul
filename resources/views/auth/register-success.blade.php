@@ -33,7 +33,7 @@
 
                         <div class="space-y-4 max-w-sm">
                             <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                                <div class="flex items-center gap-3 mb-2">
+                                <div class="flex items-center gap-3 mb-2 justify-center">
                                     <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -45,8 +45,8 @@
                                 </p>
                             </div>
 
-                            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                                <div class="flex items-center gap-3 mb-2">
+                            {{-- <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                                <div class="flex items-center gap-3 mb-2 justify-center">
                                     <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -57,7 +57,7 @@
                                 </div>
                                 <p class="text-emerald-100 text-sm">Anda akan menerima email konfirmasi setelah
                                     diverifikasi</p>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="mt-12 pt-8 border-t border-emerald-500 w-full">
@@ -79,7 +79,7 @@
 
                             <h2 class="text-3xl font-bold text-gray-900 mb-4">Terima Kasih!</h2>
                             <p class="text-gray-600 leading-relaxed mb-6">
-                                Registrasi Anda telah berhasil dikirim. Silakan menunggu verifikasi dari super admin
+                                Registrasi Anda telah berhasil dikirim. Silakan menunggu verifikasi dari admin
                                 sebelum dapat mengakses dashboard.
                             </p>
 
@@ -93,9 +93,10 @@
                                     <div class="flex-1">
                                         <p class="text-blue-800 text-sm font-medium mb-1">Langkah Selanjutnya</p>
                                         <p class="text-blue-700 text-sm">
-                                            Pastikan email Anda aktif untuk menerima notifikasi verifikasi. Setelah
-                                            diverifikasi, Anda dapat login menggunakan kredensial yang telah
-                                            didaftarkan.
+                                            Silahkan tunggu maksimal 1x24 jam untuk admin melakukan verifikasi akun
+                                            anda, Anda
+                                            dapat login menggunakan kredensial yang telah
+                                            didaftarkan setelah proses verifikasi.
                                         </p>
                                     </div>
                                 </div>
