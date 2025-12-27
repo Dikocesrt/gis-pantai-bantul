@@ -1,67 +1,186 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-@section('content')
-    <div class="min-h-screen flex items-center justify-center px-4">
-        <div class="w-full max-w-md">
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">{{ __('Login Admin') }}</h2>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-                @if ($errors->any())
-                    <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                        <ul class="list-disc list-inside text-red-700 text-sm">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+    <title>{{ config('app.name', 'GIS Pantai Bantul') }} - {{ __('Login') }}</title>
+
+    @vite('resources/css/app.css')
+</head>
+
+<body class="bg-gradient-to-br from-emerald-50 to-teal-100">
+    <div class="min-h-screen flex items-center justify-center px-4 py-8">
+        <div class="w-full max-w-5xl">
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <div class="grid md:grid-cols-2">
+                    <!-- Left Side - Welcome Section -->
+                    <div
+                        class="bg-gradient-to-br from-emerald-600 to-teal-700 p-12 text-white flex flex-col justify-center">
+                        <div class="mb-8">
+                            <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.553-.894L9 7m0 0l6-3.446m-6 3.446v12.672m0-12.672l6 3.446m0 0V16.5">
+                                </path>
+                            </svg>
+                            <h1 class="text-4xl font-bold mb-2">Selamat Datang!</h1>
+                            <p class="text-emerald-100 text-lg">Sistem Informasi Geografis Pantai Bantul</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <svg class="w-6 h-6 mt-1 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <h3 class="font-semibold mb-1">Kelola Data Wisata</h3>
+                                    <p class="text-emerald-100 text-sm">Manajemen data tempat wisata pantai di Bantul
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <svg class="w-6 h-6 mt-1 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <h3 class="font-semibold mb-1">Peta Interaktif</h3>
+                                    <p class="text-emerald-100 text-sm">Visualisasi lokasi wisata dengan peta digital
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <svg class="w-6 h-6 mt-1 flex-shrink-0" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <h3 class="font-semibold mb-1">Informasi Lengkap</h3>
+                                    <p class="text-emerald-100 text-sm">Data fasilitas dan informasi detail wisata</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-12 pt-8 border-t border-emerald-500">
+                            <p class="text-emerald-100 text-sm">© 2025 GIS Pantai Bantul. Daerah Istimewa Yogyakarta</p>
+                        </div>
                     </div>
-                @endif
 
-                @if (session('error'))
-                    <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-                        {{ session('error') }}
+                    <!-- Right Side - Login Form -->
+                    <div class="p-12">
+                        <div class="mb-8">
+                            <h2 class="text-3xl font-bold text-gray-900 mb-2">Login Admin</h2>
+                            <p class="text-gray-600">Masuk ke dashboard admin</p>
+                        </div>
+
+                        @if ($errors->any())
+                            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-red-500 mt-0.5 mr-3" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div class="flex-1">
+                                        <ul class="text-red-700 text-sm space-y-1">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if (session('error'))
+                            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-red-500 mt-0.5 mr-3" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <p class="text-red-700 text-sm">{{ session('error') }}</p>
+                                </div>
+                            </div>
+                        @endif
+
+                        <form method="POST" action="{{ route('login.post') }}" class="space-y-6">
+                            @csrf
+
+                            <div>
+                                <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Email
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <input id="email" type="email" name="email" value="{{ old('email') }}"
+                                        required autofocus
+                                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition @error('email') border-red-500 @enderror"
+                                        placeholder="admin@example.com">
+                                </div>
+                                @error('email')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Password
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <input id="password" type="password" name="password" required
+                                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition @error('password') border-red-500 @enderror"
+                                        placeholder="••••••••">
+                                </div>
+                                @error('password')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <button type="submit"
+                                class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                Login
+                            </button>
+                        </form>
+
+                        <div class="mt-8 pt-6 border-t border-gray-200">
+                            <p class="text-center text-gray-600 text-sm">
+                                Belum punya akun?
+                                <a href="{{ route('auth.register-form') }}"
+                                    class="text-emerald-600 hover:text-emerald-700 font-semibold">
+                                    Daftar di sini
+                                </a>
+                            </p>
+                        </div>
                     </div>
-                @endif
-
-                <form method="POST" action="{{ route('login.post') }}" class="space-y-4">
-                    @csrf
-
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-                            {{ __('Email') }}
-                        </label>
-                        <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition @error('email') border-red-500 @enderror">
-                        @error('email')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
-                            {{ __('Password') }}
-                        </label>
-                        <input id="password" type="password" name="password" required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition @error('password') border-red-500 @enderror">
-                        @error('password')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <button type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
-                        {{ __('Login') }}
-                    </button>
-                </form>
-
-                <div class="mt-6 pt-6 border-t border-gray-200">
-                    <p class="text-center text-gray-600 text-sm">
-                        {{ __('Belum punya akun?') }}
-                        <a href="{{ route('auth.register-form') }}" class="text-blue-600 hover:text-blue-700 font-medium">
-                            {{ __('Daftar di sini') }}
-                        </a>
-                    </p>
                 </div>
             </div>
         </div>
     </div>
-@endsection
+</body>
+
+</html>
