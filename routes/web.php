@@ -15,11 +15,16 @@ Route::get('/register-admin', [AuthController::class, 'showRegisterForm'])->name
 Route::post('/register-admin', [AuthController::class, 'registerAdmin'])->name('auth.register');
 Route::get('/register-success', [AuthController::class, 'registerSuccess'])->name('auth.register-success');
 
-// Admin verification routes (untuk super admin)
-Route::middleware(['role:super_admin'])->group(function () {
+// Admin verification routes (untuk super admin dan admin)
+Route::middleware(['role:admin,super_admin'])->group(function () {
     Route::get('/admin/verification', [AdminVerificationController::class, 'index'])->name('admin.verification.index');
     Route::post('/admin/{userId}/verify', [AdminVerificationController::class, 'verify'])->name('admin.verify');
     Route::post('/admin/{userId}/reject', [AdminVerificationController::class, 'reject'])->name('admin.reject');
+});
+
+// Admin delete route (hanya untuk super admin)
+Route::middleware(['role:super_admin'])->group(function () {
+    Route::delete('/admin/{userId}/delete', [AdminVerificationController::class, 'delete'])->name('admin.delete');
 });
 
 // Dashboard routes (untuk admin yang sudah verified)

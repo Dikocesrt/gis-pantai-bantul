@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminVerificationController extends Controller
 {
@@ -11,10 +12,21 @@ class AdminVerificationController extends Controller
     {
         $pendingAdmins = User::where('is_verified', false)
             ->where('role', 'admin')
+            ->orderBy('created_at', 'desc')
             ->get();
+
+        $verifiedAdmins = User::where('is_verified', true)
+            ->where('role', 'admin')
+            ->with('verifier')
+            ->orderBy('verified_at', 'desc')
+            ->get();
+
+        $allAdmins = User::where('role', 'admin')->get();
 
         return view('admin.verification.index', [
             'pendingAdmins' => $pendingAdmins,
+            'verifiedAdmins' => $verifiedAdmins,
+            'allAdmins' => $allAdmins,
         ]);
     }
 
@@ -54,5 +66,23 @@ class AdminVerificationController extends Controller
         $user->delete();
 
         return redirect()->back()->with('success', 'Registrasi admin ditolak dan dihapus');
+    }
+
+    public function delete($userId)
+    {
+        $user = User::findOrFail($userId);
+        $currentUser = Auth::user();
+
+        if ($user->role === 'super_admin') {
+            return redirect()->back()->with('error', 'Tidak dapat menghapus super admin');
+        }
+
+        if ($user->id === $currentUser->id) {
+            return redirect()->back()->with('error', 'Tidak dapat menghapus akun sendiri');
+        }
+
+        $user->delete();
+
+        return redirect()->back()->with('success', 'Admin berhasil dihapus');
     }
 }
