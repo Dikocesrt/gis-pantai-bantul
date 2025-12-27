@@ -33,4 +33,10 @@ Route::middleware(['role:admin,super_admin'])->group(function () {
     Route::post('/kecamatan', [App\Http\Controllers\KecamatanController::class, 'store'])->name('kecamatan.store');
     Route::put('/kecamatan/{kecamatan}', [App\Http\Controllers\KecamatanController::class, 'update'])->name('kecamatan.update');
     Route::delete('/kecamatan/{kecamatan}', [App\Http\Controllers\KecamatanController::class, 'destroy'])->name('kecamatan.destroy');
+
+    // Fasilitas routes
+    Route::get('/fasilitas', [App\Http\Controllers\FasilitasController::class, 'index'])->name('fasilitas.index');
+    Route::post('/fasilitas', [App\Http\Controllers\FasilitasController::class, 'store'])->name('fasilitas.store');
+    Route::put('/fasilitas/{id}', [App\Http\Controllers\FasilitasController::class, 'update'])->name('fasilitas.update');
+    Route::delete('/fasilitas/{id}', [App\Http\Controllers\FasilitasController::class, 'destroy'])->name('fasilitas.destroy');
 });

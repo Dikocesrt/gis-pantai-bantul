@@ -8,7 +8,6 @@
                 if (toast) {
                     toast.classList.remove('translate-x-[400px]');
                     toast.classList.add('translate-x-0');
-                    console.log('Toast shown:', toastId);
                 }
             }, 100);
 
@@ -114,15 +113,14 @@
             class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-emerald-500 hover:shadow-xl transition-all duration-200">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-gray-600 text-sm font-medium mb-2">Total Kecamatan</p>
-                    <h3 class="text-4xl font-bold text-gray-900">{{ $kecamatans->count() }}</h3>
+                    <p class="text-gray-600 text-sm font-medium mb-2">Total Fasilitas</p>
+                    <h3 class="text-4xl font-bold text-gray-900">{{ $fasilitas->count() }}</h3>
                 </div>
                 <div class="bg-emerald-50 p-3 rounded-lg">
                     <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                        </path>
                     </svg>
                 </div>
             </div>
@@ -134,7 +132,7 @@
                 <div>
                     <p class="text-gray-600 text-sm font-medium mb-2">Ditambahkan Hari Ini</p>
                     <h3 class="text-4xl font-bold text-gray-900">
-                        {{ $kecamatans->where('created_at', '>=', now()->startOfDay())->count() }}</h3>
+                        {{ $fasilitas->where('created_at', '>=', now()->startOfDay())->count() }}</h3>
                 </div>
                 <div class="bg-teal-50 p-3 rounded-lg">
                     <svg class="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,7 +149,7 @@
                 <div>
                     <p class="text-gray-600 text-sm font-medium mb-2">Terakhir Diperbarui</p>
                     <h3 class="text-lg font-bold text-gray-900">
-                        {{ $kecamatans->first()?->updated_at?->diffForHumans() ?? 'Belum ada data' }}</h3>
+                        {{ $fasilitas->first()?->updated_at?->diffForHumans() ?? 'Belum ada data' }}</h3>
                 </div>
                 <div class="bg-cyan-50 p-3 rounded-lg">
                     <svg class="w-8 h-8 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,8 +165,8 @@
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
         <div class="p-6 border-b border-gray-200 flex justify-between items-center">
             <div>
-                <h3 class="text-xl font-bold text-gray-900">Daftar Kecamatan</h3>
-                <p class="text-gray-600 text-sm mt-1">Kelola semua data kecamatan</p>
+                <h3 class="text-xl font-bold text-gray-900">Daftar Fasilitas</h3>
+                <p class="text-gray-600 text-sm mt-1">Kelola semua data fasilitas</p>
             </div>
             <button onclick="openCreateModal()"
                 class="inline-flex items-center gap-2 px-4 py-2 bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
@@ -176,7 +174,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
                     </path>
                 </svg>
-                Tambah Kecamatan
+                Tambah Fasilitas
             </button>
         </div>
 
@@ -186,8 +184,10 @@
                     <tr>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No
                         </th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Icon
+                        </th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama
-                            Kecamatan</th>
+                            Fasilitas</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Dibuat Oleh</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -197,28 +197,22 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    @forelse ($kecamatans as $index => $kecamatan)
+                    @forelse ($fasilitas as $index => $item)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ $index + 1 }}</td>
                             <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="bg-emerald-100 p-2 rounded-lg">
-                                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                    <span class="text-sm font-semibold text-gray-900">{{ $kecamatan->name }}</span>
-                                </div>
+                                <x-cld-image :public-id="$item->icon" width="48" height="48" crop="fill"
+                                    :alt="$item->name" class="w-12 h-12 rounded-lg object-cover" />
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ $kecamatan->creator?->name ?? '-' }}</td>
+                            <td class="px-6 py-4">
+                                <span class="text-sm font-semibold text-gray-900">{{ $item->name }}</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">{{ $item->creator?->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600">
-                                {{ $kecamatan->created_at->format('d M Y, H:i') }}</td>
+                                {{ $item->created_at->format('d M Y, H:i') }}</td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
-                                    <button onclick='openEditModal(@json($kecamatan))'
+                                    <button onclick='openEditModal(@json($item))'
                                         class="inline-flex items-center gap-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-all duration-200">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -227,7 +221,7 @@
                                         </svg>
                                         Edit
                                     </button>
-                                    <button onclick='openDeleteModal(@json($kecamatan))'
+                                    <button onclick='openDeleteModal(@json($item))'
                                         class="inline-flex items-center gap-1 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-all duration-200">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -241,7 +235,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center">
+                            <td colspan="6" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center justify-center">
                                     <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
@@ -249,8 +243,8 @@
                                             d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
                                         </path>
                                     </svg>
-                                    <p class="text-gray-600 font-medium">Belum ada data kecamatan</p>
-                                    <p class="text-gray-500 text-sm mt-1">Klik tombol "Tambah Kecamatan" untuk menambahkan
+                                    <p class="text-gray-600 font-medium">Belum ada data fasilitas</p>
+                                    <p class="text-gray-500 text-sm mt-1">Klik tombol "Tambah Fasilitas" untuk menambahkan
                                         data</p>
                                 </div>
                             </td>
@@ -266,7 +260,7 @@
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all relative z-[101]">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-2xl font-bold text-gray-900">Tambah Kecamatan</h3>
+                    <h3 class="text-2xl font-bold text-gray-900">Tambah Fasilitas</h3>
                     <button onclick="closeCreateModal()" class="text-gray-400 hover:text-gray-600 transition">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -275,18 +269,28 @@
                     </button>
                 </div>
             </div>
-            <form action="{{ route('kecamatan.store') }}" method="POST" class="p-6">
+            <form action="{{ route('fasilitas.store') }}" method="POST" enctype="multipart/form-data" class="p-6">
                 @csrf
-                <div class="mb-6">
+                <div class="mb-4">
                     <label for="create_name" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Nama Kecamatan
+                        Nama Fasilitas
                     </label>
                     <input type="text" id="create_name" name="name" required
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition"
-                        placeholder="Contoh: Srandakan">
-                    @error('name')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                        placeholder="Contoh: Toilet">
+                </div>
+                <div class="mb-6">
+                    <label for="create_icon" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Icon Fasilitas
+                    </label>
+                    <input type="file" id="create_icon" name="icon" accept="image/*,.svg" required
+                        onchange="previewCreateImage(event)"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
+                    <p class="text-xs text-gray-500 mt-1">Format: JPEG, JPG, PNG, GIF, WEBP, SVG. Maksimal 10 MB</p>
+                    <div id="create_preview" class="mt-3 hidden">
+                        <img id="create_preview_img" src="" alt="Preview"
+                            class="w-32 h-32 object-cover rounded-lg border-2 border-gray-200">
+                    </div>
                 </div>
                 <div class="flex gap-3">
                     <button type="button" onclick="closeCreateModal()"
@@ -307,7 +311,7 @@
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all relative z-[101]">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-2xl font-bold text-gray-900">Edit Kecamatan</h3>
+                    <h3 class="text-2xl font-bold text-gray-900">Edit Fasilitas</h3>
                     <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -316,18 +320,35 @@
                     </button>
                 </div>
             </div>
-            <form id="editForm" method="POST" class="p-6">
+            <form id="editForm" method="POST" enctype="multipart/form-data" class="p-6">
                 @csrf
                 @method('PUT')
-                <div class="mb-6">
+                <div class="mb-4">
                     <label for="edit_name" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Nama Kecamatan
+                        Nama Fasilitas
                     </label>
                     <input type="text" id="edit_name" name="name" required
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
-                    @error('name')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Icon Saat Ini
+                    </label>
+                    <img id="edit_current_icon" src="" alt="Current Icon"
+                        class="w-32 h-32 object-cover rounded-lg border-2 border-gray-200">
+                </div>
+                <div class="mb-6">
+                    <label for="edit_icon" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Ganti Icon (Opsional)
+                    </label>
+                    <input type="file" id="edit_icon" name="icon" accept="image/*,.svg"
+                        onchange="previewEditImage(event)"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
+                    <p class="text-xs text-gray-500 mt-1">Format: JPEG, JPG, PNG, GIF, WEBP, SVG. Maksimal 10 MB</p>
+                    <div id="edit_preview" class="mt-3 hidden">
+                        <img id="edit_preview_img" src="" alt="Preview"
+                            class="w-32 h-32 object-cover rounded-lg border-2 border-gray-200">
+                    </div>
                 </div>
                 <div class="flex gap-3">
                     <button type="button" onclick="closeEditModal()"
@@ -348,7 +369,7 @@
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all relative z-[101]">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-2xl font-bold text-gray-900">Hapus Kecamatan</h3>
+                    <h3 class="text-2xl font-bold text-gray-900">Hapus Fasilitas</h3>
                     <button onclick="closeDeleteModal()" class="text-gray-400 hover:text-gray-600 transition">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -371,7 +392,7 @@
                         </div>
                         <div>
                             <p class="text-sm font-semibold text-gray-900">Apakah Anda yakin?</p>
-                            <p class="text-sm text-gray-600 mt-1">Data kecamatan "<span id="delete_name"
+                            <p class="text-sm text-gray-600 mt-1">Data fasilitas "<span id="delete_name"
                                     class="font-semibold"></span>" akan dihapus permanen.</p>
                         </div>
                     </div>
@@ -391,28 +412,61 @@
     </div>
 
     <script>
+        function previewCreateImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('create_preview').classList.remove('hidden');
+                    document.getElementById('create_preview_img').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function previewEditImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('edit_preview').classList.remove('hidden');
+                    document.getElementById('edit_preview_img').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
         function openCreateModal() {
             document.getElementById('createModal').classList.remove('hidden');
+            document.getElementById('create_name').value = '';
+            document.getElementById('create_icon').value = '';
+            document.getElementById('create_preview').classList.add('hidden');
         }
 
         function closeCreateModal() {
             document.getElementById('createModal').classList.add('hidden');
         }
 
-        function openEditModal(kecamatan) {
+        function openEditModal(fasilitas) {
             document.getElementById('editModal').classList.remove('hidden');
-            document.getElementById('edit_name').value = kecamatan.name;
-            document.getElementById('editForm').action = `/kecamatan/${kecamatan.id}`;
+            document.getElementById('edit_name').value = fasilitas.name;
+            document.getElementById('editForm').action = `/fasilitas/${fasilitas.id}`;
+
+            // Show current icon using Cloudinary URL
+            document.getElementById('edit_current_icon').src = fasilitas.icon_url;
+
+            document.getElementById('edit_icon').value = '';
+            document.getElementById('edit_preview').classList.add('hidden');
         }
 
         function closeEditModal() {
             document.getElementById('editModal').classList.add('hidden');
         }
 
-        function openDeleteModal(kecamatan) {
+        function openDeleteModal(fasilitas) {
             document.getElementById('deleteModal').classList.remove('hidden');
-            document.getElementById('delete_name').textContent = kecamatan.name;
-            document.getElementById('deleteForm').action = `/kecamatan/${kecamatan.id}`;
+            document.getElementById('delete_name').textContent = fasilitas.name;
+            document.getElementById('deleteForm').action = `/fasilitas/${fasilitas.id}`;
         }
 
         function closeDeleteModal() {

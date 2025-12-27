@@ -13,8 +13,8 @@ class Fasilitas extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'id',
         'name',
-        'slug',
         'icon',
         'created_by',
         'updated_by',
@@ -23,5 +23,15 @@ class Fasilitas extends Model
     public function tempatWisata()
     {
         return $this->belongsToMany(TempatWisata::class, 'tempat_fasilitas');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updater()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }
