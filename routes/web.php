@@ -29,9 +29,7 @@ Route::middleware(['role:super_admin'])->group(function () {
 
 // Dashboard routes (untuk admin yang sudah verified)
 Route::middleware(['role:admin,super_admin'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard.index');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Kecamatan routes
     Route::get('/kecamatan', [App\Http\Controllers\KecamatanController::class, 'index'])->name('kecamatan.index');

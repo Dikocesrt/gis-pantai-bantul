@@ -9,11 +9,11 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div
-            class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-emerald-500 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
+            class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-emerald-500 hover:shadow-xl transition-all duration-200">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-gray-600 text-sm font-medium mb-2">Kecamatan</p>
-                    <h3 class="text-4xl font-bold text-gray-900">0</h3>
+                    <h3 class="text-4xl font-bold text-gray-900">{{ $stats['kecamatan'] }}</h3>
                 </div>
                 <div class="bg-emerald-50 p-3 rounded-lg">
                     <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -27,11 +27,11 @@
         </div>
 
         <div
-            class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-teal-500 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
+            class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-teal-500 hover:shadow-xl transition-all duration-200">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-gray-600 text-sm font-medium mb-2">Fasilitas</p>
-                    <h3 class="text-4xl font-bold text-gray-900">0</h3>
+                    <h3 class="text-4xl font-bold text-gray-900">{{ $stats['fasilitas'] }}</h3>
                 </div>
                 <div class="bg-teal-50 p-3 rounded-lg">
                     <svg class="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,11 +44,11 @@
         </div>
 
         <div
-            class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-cyan-500 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
+            class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-cyan-500 hover:shadow-xl transition-all duration-200">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-gray-600 text-sm font-medium mb-2">Tipe Tempat</p>
-                    <h3 class="text-4xl font-bold text-gray-900">0</h3>
+                    <h3 class="text-4xl font-bold text-gray-900">{{ $stats['tipe_tempat'] }}</h3>
                 </div>
                 <div class="bg-cyan-50 p-3 rounded-lg">
                     <svg class="w-8 h-8 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,11 +61,11 @@
         </div>
 
         <div
-            class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
+            class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500 hover:shadow-xl transition-all duration-200">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-gray-600 text-sm font-medium mb-2">Tempat Wisata</p>
-                    <h3 class="text-4xl font-bold text-gray-900">0</h3>
+                    <h3 class="text-4xl font-bold text-gray-900">{{ $stats['tempat_wisata'] }}</h3>
                 </div>
                 <div class="bg-blue-50 p-3 rounded-lg">
                     <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,7 +95,12 @@
                     </p>
                     @if (Auth::user()->role === 'super_admin')
                         <p class="font-medium text-emerald-700">Sebagai super admin, Anda juga dapat mengelola akun admin
-                            melalui menu <span class="font-semibold">Verifikasi Admin</span>.
+                            melalui menu <span class="font-semibold">Pengelolaan Admin</span>.
+                        </p>
+                    @endif
+                    @if (Auth::user()->role === 'admin')
+                        <p class="font-medium text-emerald-700">Sebagai admin, Anda dapat membantu verifikasi admin baru
+                            melalui menu <span class="font-semibold">Pengelolaan Admin</span>.
                         </p>
                     @endif
                 </div>
