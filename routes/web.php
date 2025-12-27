@@ -48,4 +48,12 @@ Route::middleware(['role:admin,super_admin'])->group(function () {
     Route::post('/tipe-tempat', [App\Http\Controllers\TipeTempatController::class, 'store'])->name('tipe-tempat.store');
     Route::put('/tipe-tempat/{id}', [App\Http\Controllers\TipeTempatController::class, 'update'])->name('tipe-tempat.update');
     Route::delete('/tipe-tempat/{id}', [App\Http\Controllers\TipeTempatController::class, 'destroy'])->name('tipe-tempat.destroy');
+
+    // Tempat Wisata routes
+    Route::get('/tempat-wisata', [App\Http\Controllers\TempatWisataController::class, 'index'])->name('tempat-wisata.index');
+    Route::get('/tempat-wisata/create', [App\Http\Controllers\TempatWisataController::class, 'create'])->name('tempat-wisata.create');
+    Route::post('/tempat-wisata', [App\Http\Controllers\TempatWisataController::class, 'store'])->name('tempat-wisata.store');
+    Route::get('/tempat-wisata/{id}/edit', [App\Http\Controllers\TempatWisataController::class, 'edit'])->name('tempat-wisata.edit');
+    Route::put('/tempat-wisata/{id}', [App\Http\Controllers\TempatWisataController::class, 'update'])->name('tempat-wisata.update');
+    Route::delete('/tempat-wisata/{id}', [App\Http\Controllers\TempatWisataController::class, 'destroy'])->name('tempat-wisata.destroy');
 });

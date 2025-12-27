@@ -15,6 +15,7 @@ class OpeningHours extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'id',
         'tempat_wisata_id',
         'day_of_week',
         'open_time',

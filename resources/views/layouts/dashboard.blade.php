@@ -109,8 +109,8 @@
                     </svg>
                     <span class="font-medium sidebar-text whitespace-nowrap">Tipe Tempat</span>
                 </a>
-                <a href="#" title="Tempat Wisata"
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200 group">
+                <a href="{{ route('tempat-wisata.index') }}" title="Tempat Wisata"
+                    class="@if (request()->routeIs('tempat-wisata.*')) bg-white/20 backdrop-blur-sm shadow-lg @endif flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200 group">
                     <svg class="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

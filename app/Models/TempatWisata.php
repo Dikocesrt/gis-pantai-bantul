@@ -15,6 +15,7 @@ class TempatWisata extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'id',
         'name',
         'slug',
         'description',
@@ -24,7 +25,7 @@ class TempatWisata extends Model
         'latitude',
         'longitude',
         'phone',
-        'website',
+        'is_active',
         'created_by',
         'updated_by',
     ];
@@ -32,6 +33,7 @@ class TempatWisata extends Model
     protected $casts = [
         'latitude' => 'decimal:7',
         'longitude' => 'decimal:7',
+        'is_active' => 'boolean',
     ];
 
     public function kecamatan()
