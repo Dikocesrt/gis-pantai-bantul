@@ -25,7 +25,8 @@
 <body class="bg-gray-50">
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <aside class="w-64 bg-linear-to-b from-emerald-600 to-teal-700 text-white shadow-2xl hidden md:flex flex-col">
+        <aside
+            class="w-64 bg-linear-to-b from-emerald-600 to-teal-700 text-white shadow-2xl hidden md:flex flex-col relative z-10">
             <div class="p-6 border-b border-emerald-500/30">
                 <h2 class="text-xl font-bold flex items-center gap-3">
                     <div class="bg-white/20 backdrop-blur-sm p-2 rounded-lg">
@@ -55,8 +56,8 @@
                 <div class="text-xs font-semibold text-emerald-100 uppercase tracking-wider px-4 mb-3 mt-6">Manajemen
                     Data
                 </div>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200 group">
+                <a href="{{ route('kecamatan.index') }}"
+                    class="@if (request()->routeIs('kecamatan.*')) bg-white/20 backdrop-blur-sm shadow-lg @endif flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200 group">
                     <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

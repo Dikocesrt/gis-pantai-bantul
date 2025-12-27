@@ -63,7 +63,7 @@ class AuthController extends Controller
     public function registerAdmin(RegisterAdminRequest $request)
     {
         User::create([
-            'id' => (string) Str::uuid(),
+            'id' => Str::uuid(),
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,

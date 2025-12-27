@@ -15,11 +15,6 @@ Route::get('/register-admin', [AuthController::class, 'showRegisterForm'])->name
 Route::post('/register-admin', [AuthController::class, 'registerAdmin'])->name('auth.register');
 Route::get('/register-success', [AuthController::class, 'registerSuccess'])->name('auth.register-success');
 
-// Dashboard routes (untuk admin dan super admin)
-Route::middleware(['role:super_admin,admin'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-});
-
 // Admin verification routes (untuk super admin)
 Route::middleware(['role:super_admin'])->group(function () {
     Route::get('/admin/verification', [AdminVerificationController::class, 'index'])->name('admin.verification.index');
@@ -32,4 +27,10 @@ Route::middleware(['role:admin,super_admin'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard.index');
     })->name('dashboard');
+
+    // Kecamatan routes
+    Route::get('/kecamatan', [App\Http\Controllers\KecamatanController::class, 'index'])->name('kecamatan.index');
+    Route::post('/kecamatan', [App\Http\Controllers\KecamatanController::class, 'store'])->name('kecamatan.store');
+    Route::put('/kecamatan/{kecamatan}', [App\Http\Controllers\KecamatanController::class, 'update'])->name('kecamatan.update');
+    Route::delete('/kecamatan/{kecamatan}', [App\Http\Controllers\KecamatanController::class, 'destroy'])->name('kecamatan.destroy');
 });
