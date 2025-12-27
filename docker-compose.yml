@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gis-pantai-app
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./storage:/app/storage
+      - ./.env:/app/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - gis-network
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+
+  db:
+    image: mysql:8.0
+    container_name: gis-pantai-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - gis-network
+
+networks:
+  gis-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
