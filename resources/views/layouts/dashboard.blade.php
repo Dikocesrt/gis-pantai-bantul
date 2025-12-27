@@ -23,43 +23,63 @@
 </head>
 
 <body class="bg-gray-50">
-    <div class="flex h-screen">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Mobile Overlay -->
+        <div id="mobileOverlay" class="hidden fixed inset-0 bg-black/50 z-40 md:hidden"></div>
+
         <!-- Sidebar -->
-        <aside
-            class="w-64 bg-linear-to-b from-emerald-600 to-teal-700 text-white shadow-2xl hidden md:flex flex-col relative z-10">
-            <div class="p-6 border-b border-emerald-500/30">
-                <h2 class="text-xl font-bold flex items-center gap-3">
-                    <div class="bg-white/20 backdrop-blur-sm p-2 rounded-lg">
+        <aside id="sidebar"
+            class="fixed md:relative inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out bg-linear-to-b from-emerald-600 to-teal-700 text-white shadow-2xl flex flex-col z-50 w-64">
+            <div class="p-6 border-b border-emerald-500/30 flex items-center justify-between">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <div class="bg-white/20 backdrop-blur-sm p-2 rounded-lg shrink-0">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.553-.894L9 7m0 0l6-3.446m-6 3.446v12.672m0-12.672l6 3.446m0 0V16.5">
                             </path>
                         </svg>
                     </div>
-                    <span>GIS Pantai</span>
-                </h2>
+                    <h2 class="text-xl font-bold whitespace-nowrap sidebar-text">GIS Pantai</h2>
+                </div>
+                <!-- Toggle Button (Desktop) -->
+                <button onclick="toggleSidebar()"
+                    class="hidden md:block text-white hover:bg-white/10 p-2 rounded-lg transition">
+                    <svg id="toggleIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <!-- Close Button (Mobile) -->
+                <button onclick="closeMobileSidebar()"
+                    class="md:hidden text-white hover:bg-white/10 p-2 rounded-lg transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
             </div>
 
             <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                <div class="text-xs font-semibold text-emerald-100 uppercase tracking-wider px-4 mb-3">Menu Utama</div>
-                <a href="{{ route('dashboard') }}"
+                <div class="text-xs font-semibold text-emerald-100 uppercase tracking-wider px-4 mb-3 sidebar-text">Menu
+                    Utama</div>
+                <a href="{{ route('dashboard') }}" title="Dashboard"
                     class="@if (request()->routeIs('dashboard')) bg-white/20 backdrop-blur-sm shadow-lg @endif flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200 group">
-                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg>
-                    <span class="font-medium">Dashboard</span>
+                    <span class="font-medium sidebar-text whitespace-nowrap">Dashboard</span>
                 </a>
 
-                <div class="text-xs font-semibold text-emerald-100 uppercase tracking-wider px-4 mb-3 mt-6">Manajemen
-                    Data
-                </div>
-                <a href="{{ route('kecamatan.index') }}"
+                <div
+                    class="text-xs font-semibold text-emerald-100 uppercase tracking-wider px-4 mb-3 mt-6 sidebar-text">
+                    Manajemen Data</div>
+                <a href="{{ route('kecamatan.index') }}" title="Kecamatan"
                     class="@if (request()->routeIs('kecamatan.*')) bg-white/20 backdrop-blur-sm shadow-lg @endif flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200 group">
-                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
                         </path>
@@ -67,57 +87,58 @@
                             d="M15 11a3 3 0 11-6 0 3 3 0 016 0z">
                         </path>
                     </svg>
-                    <span class="font-medium">Kecamatan</span>
+                    <span class="font-medium sidebar-text whitespace-nowrap">Kecamatan</span>
                 </a>
-                <a href="#"
+                <a href="#" title="Fasilitas"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200 group">
-                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
                         </path>
                     </svg>
-                    <span class="font-medium">Fasilitas</span>
+                    <span class="font-medium sidebar-text whitespace-nowrap">Fasilitas</span>
                 </a>
-                <a href="#"
+                <a href="#" title="Tipe Tempat"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200 group">
-                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
                         </path>
                     </svg>
-                    <span class="font-medium">Tipe Tempat</span>
+                    <span class="font-medium sidebar-text whitespace-nowrap">Tipe Tempat</span>
                 </a>
-                <a href="#"
+                <a href="#" title="Tempat Wisata"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200 group">
-                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
                         </path>
                     </svg>
-                    <span class="font-medium">Tempat Wisata</span>
+                    <span class="font-medium sidebar-text whitespace-nowrap">Tempat Wisata</span>
                 </a>
 
                 @if (Auth::user()->role === 'super_admin')
-                    <div class="text-xs font-semibold text-emerald-100 uppercase tracking-wider px-4 mb-3 mt-6">
+                    <div
+                        class="text-xs font-semibold text-emerald-100 uppercase tracking-wider px-4 mb-3 mt-6 sidebar-text">
                         Administrasi</div>
-                    <a href="{{ route('admin.verification.index') }}"
+                    <a href="{{ route('admin.verification.index') }}" title="Verifikasi Admin"
                         class="@if (request()->routeIs('admin.*')) bg-white/20 backdrop-blur-sm shadow-lg @endif flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200 group">
-                        <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none"
+                        <svg class="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
                             </path>
                         </svg>
-                        <span class="font-medium">Verifikasi Admin</span>
+                        <span class="font-medium sidebar-text whitespace-nowrap">Verifikasi Admin</span>
                     </a>
                 @endif
             </nav>
 
             <div class="p-4 border-t border-emerald-500/30">
-                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-3">
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-3 sidebar-text">
                     <p class="text-xs text-emerald-100 leading-relaxed">© 2025 GIS Pantai Bantul</p>
                     <p class="text-xs text-emerald-200 font-medium">Daerah Istimewa Yogyakarta</p>
                 </div>
@@ -129,7 +150,16 @@
             <!-- Top Navbar -->
             <nav class="bg-white border-b border-gray-200 shadow-sm">
                 <div class="px-6 py-4 flex justify-between items-center">
-                    <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+                    <div class="flex items-center gap-4">
+                        <!-- Mobile Menu Button -->
+                        <button onclick="openMobileSidebar()" class="md:hidden text-gray-600 hover:text-gray-900">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+                    </div>
 
                     <div class="flex items-center gap-4">
                         <div class="text-right">
@@ -163,6 +193,100 @@
             </main>
         </div>
     </div>
+
+    <script>
+        let sidebarCollapsed = false;
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleIcon = document.getElementById('toggleIcon');
+            const sidebarTexts = document.querySelectorAll('.sidebar-text');
+
+            sidebarCollapsed = !sidebarCollapsed;
+
+            if (sidebarCollapsed) {
+                // Collapse sidebar
+                sidebar.classList.remove('w-64');
+                sidebar.classList.add('w-20');
+                sidebarTexts.forEach(el => el.classList.add('hidden'));
+                // Rotate icon
+                toggleIcon.innerHTML =
+                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>';
+            } else {
+                // Expand sidebar
+                sidebar.classList.remove('w-20');
+                sidebar.classList.add('w-64');
+                sidebarTexts.forEach(el => el.classList.remove('hidden'));
+                // Rotate icon back
+                toggleIcon.innerHTML =
+                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>';
+            }
+        }
+
+        function openMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            const sidebarTexts = document.querySelectorAll('.sidebar-text');
+
+            // Force icon-only mode for mobile
+            sidebar.classList.remove('w-64');
+            sidebar.classList.add('w-20');
+            sidebarTexts.forEach(el => el.classList.add('hidden'));
+
+            sidebar.classList.remove('-translate-x-full');
+            sidebar.classList.add('translate-x-0');
+            overlay.classList.remove('hidden');
+        }
+
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+
+            sidebar.classList.add('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            overlay.classList.add('hidden');
+        }
+
+        // Close sidebar when clicking overlay
+        document.getElementById('mobileOverlay')?.addEventListener('click', closeMobileSidebar);
+
+        // Initialize sidebar state on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarTexts = document.querySelectorAll('.sidebar-text');
+
+            // Check if mobile view
+            if (window.innerWidth < 768) {
+                // Force icon-only mode for mobile
+                sidebar.classList.remove('w-64');
+                sidebar.classList.add('w-20');
+                sidebarTexts.forEach(el => el.classList.add('hidden'));
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarTexts = document.querySelectorAll('.sidebar-text');
+
+            if (window.innerWidth < 768) {
+                // Mobile: force icon-only and hide
+                sidebar.classList.remove('w-64');
+                sidebar.classList.add('w-20');
+                sidebar.classList.add('-translate-x-full');
+                sidebarTexts.forEach(el => el.classList.add('hidden'));
+                document.getElementById('mobileOverlay')?.classList.add('hidden');
+            } else {
+                // Desktop: restore to expanded if not manually collapsed
+                if (!sidebarCollapsed) {
+                    sidebar.classList.remove('w-20');
+                    sidebar.classList.add('w-64');
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebarTexts.forEach(el => el.classList.remove('hidden'));
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
