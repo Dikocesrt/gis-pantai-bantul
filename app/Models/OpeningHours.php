@@ -9,6 +9,8 @@ class OpeningHours extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'opening_hours';
+
     protected $keyType = 'string';
     public $incrementing = false;
 

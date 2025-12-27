@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateFasilitasRequest extends FormRequest
+class UpdateTipeTempatRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -19,7 +19,7 @@ class UpdateFasilitasRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('fasilitas', 'name')
+                Rule::unique('tipe_tempats', 'name')
                     ->ignore($this->route('id'))
                     ->whereNull('deleted_at'),
             ],
@@ -30,8 +30,8 @@ class UpdateFasilitasRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Nama fasilitas wajib diisi',
-            'name.unique' => 'Nama fasilitas sudah terdaftar',
+            'name.required' => 'Nama tipe tempat wajib diisi',
+            'name.unique' => 'Nama tipe tempat sudah terdaftar',
             'icon.file' => 'File harus berupa file yang valid',
             'icon.mimes' => 'Format gambar harus jpeg, jpg, png, gif, webp, atau svg',
             'icon.max' => 'Ukuran gambar maksimal 10 MB',

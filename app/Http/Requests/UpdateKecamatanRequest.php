@@ -19,7 +19,9 @@ class UpdateKecamatanRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('kecamatans', 'name')->ignore($this->route('kecamatan')),
+                Rule::unique('kecamatans', 'name')
+                    ->ignore($this->route('kecamatan'))
+                    ->whereNull('deleted_at'),
             ],
         ];
     }

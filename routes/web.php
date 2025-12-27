@@ -39,4 +39,10 @@ Route::middleware(['role:admin,super_admin'])->group(function () {
     Route::post('/fasilitas', [App\Http\Controllers\FasilitasController::class, 'store'])->name('fasilitas.store');
     Route::put('/fasilitas/{id}', [App\Http\Controllers\FasilitasController::class, 'update'])->name('fasilitas.update');
     Route::delete('/fasilitas/{id}', [App\Http\Controllers\FasilitasController::class, 'destroy'])->name('fasilitas.destroy');
+
+    // Tipe Tempat routes
+    Route::get('/tipe-tempat', [App\Http\Controllers\TipeTempatController::class, 'index'])->name('tipe-tempat.index');
+    Route::post('/tipe-tempat', [App\Http\Controllers\TipeTempatController::class, 'store'])->name('tipe-tempat.store');
+    Route::put('/tipe-tempat/{id}', [App\Http\Controllers\TipeTempatController::class, 'update'])->name('tipe-tempat.update');
+    Route::delete('/tipe-tempat/{id}', [App\Http\Controllers\TipeTempatController::class, 'destroy'])->name('tipe-tempat.destroy');
 });

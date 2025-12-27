@@ -9,6 +9,8 @@ class WisataImage extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'wisata_images';
+
     protected $keyType = 'string';
     public $incrementing = false;
 

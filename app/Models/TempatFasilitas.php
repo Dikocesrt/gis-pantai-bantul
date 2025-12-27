@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TempatFasilitas extends Model
 {
+    protected $table = 'tempat_fasilitas';
+
     protected $keyType = 'string';
     public $incrementing = false;
 

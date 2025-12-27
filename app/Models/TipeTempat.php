@@ -9,12 +9,15 @@ class TipeTempat extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'tipe_tempats';
+    
     protected $keyType = 'string';
     public $incrementing = false;
 
     protected $fillable = [
+        'id',
         'name',
-        'description',
+        'icon',
         'created_by',
         'updated_by',
     ];
@@ -22,5 +25,15 @@ class TipeTempat extends Model
     public function tempatWisata()
     {
         return $this->hasMany(TempatWisata::class);
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updater()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }

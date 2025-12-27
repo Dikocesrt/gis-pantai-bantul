@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreFasilitasRequest extends FormRequest
 {
@@ -14,7 +15,12 @@ class StoreFasilitasRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:fasilitas,name',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('fasilitas', 'name')->whereNull('deleted_at'),
+            ],
             'icon' => 'required|file|mimes:jpeg,jpg,png,gif,webp,svg|max:10240',
         ];
     }

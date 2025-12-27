@@ -9,6 +9,8 @@ class TempatWisata extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'tempat_wisatas';
+
     protected $keyType = 'string';
     public $incrementing = false;
 

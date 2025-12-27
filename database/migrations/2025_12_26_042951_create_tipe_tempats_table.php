@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tipe_tempats', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->text('description')->nullable();
+            $table->string('icon')->nullable();
             $table->uuid('created_by')->nullable();
             $table->uuid('updated_by')->nullable();
             $table->softDeletes();

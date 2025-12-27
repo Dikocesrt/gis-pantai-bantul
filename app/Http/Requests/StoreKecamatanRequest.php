@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreKecamatanRequest extends FormRequest
 {
@@ -14,7 +15,12 @@ class StoreKecamatanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:kecamatans,name'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('kecamatans', 'name')->whereNull('deleted_at'),
+            ],
         ];
     }
 
