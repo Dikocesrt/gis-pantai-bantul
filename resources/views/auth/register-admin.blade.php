@@ -12,6 +12,69 @@
 </head>
 
 <body class="bg-linear-to-br from-emerald-50 to-teal-100">
+    <script>
+        function showToast(toastId) {
+            setTimeout(() => {
+                const toast = document.getElementById(toastId);
+                if (toast) {
+                    toast.classList.remove('translate-x-[400px]');
+                    toast.classList.add('translate-x-0');
+                }
+            }, 100);
+
+            setTimeout(() => {
+                closeToast(toastId);
+            }, 5000);
+        }
+
+        function closeToast(toastId) {
+            const toast = document.getElementById(toastId);
+            if (toast) {
+                toast.classList.remove('translate-x-0');
+                toast.classList.add('translate-x-[400px]');
+                setTimeout(() => {
+                    toast.remove();
+                }, 500);
+            }
+        }
+    </script>
+
+    @if ($errors->any())
+        <div id="errorToast"
+            class="fixed top-6 right-6 z-[200] transform translate-x-[400px] transition-transform duration-500 ease-out">
+            <div class="bg-white rounded-xl shadow-2xl border-l-4 border-red-500 p-4 min-w-[320px] max-w-md">
+                <div class="flex items-start gap-3">
+                    <div class="bg-red-100 p-2 rounded-lg shrink-0">
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-gray-900 mb-1">Gagal!</h4>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <p>{{ $error }}</p>
+                            @endforeach
+                        </div>
+                    </div>
+                    <button onclick="closeToast('errorToast')"
+                        class="text-gray-400 hover:text-gray-600 transition shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            showToast('errorToast');
+        </script>
+    @endif
+
     <div class="min-h-screen flex items-center justify-center px-4 py-8">
         <div class="w-full max-w-5xl">
             <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
@@ -22,25 +85,6 @@
                             <h2 class="text-3xl font-bold text-gray-900 mb-2">Registrasi Admin</h2>
                             <p class="text-gray-600">Lengkapi data untuk mendaftar</p>
                         </div>
-
-                        @if ($errors->any())
-                            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
-                                <div class="flex items-start">
-                                    <svg class="w-5 h-5 text-red-500 mt-0.5 mr-3" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    <div class="flex-1">
-                                        <ul class="text-red-700 text-sm space-y-1">
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
 
                         <form method="POST" action="{{ route('auth.register') }}" class="space-y-4">
                             @csrf
