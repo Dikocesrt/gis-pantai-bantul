@@ -1,6 +1,33 @@
 @extends('layouts.dashboard')
 
 @section('content')
+    <script>
+        function showToast(toastId) {
+            setTimeout(() => {
+                const toast = document.getElementById(toastId);
+                if (toast) {
+                    toast.classList.remove('translate-x-[400px]');
+                    toast.classList.add('translate-x-0');
+                }
+            }, 100);
+
+            setTimeout(() => {
+                closeToast(toastId);
+            }, 5000);
+        }
+
+        function closeToast(toastId) {
+            const toast = document.getElementById(toastId);
+            if (toast) {
+                toast.classList.remove('translate-x-0');
+                toast.classList.add('translate-x-[400px]');
+                setTimeout(() => {
+                    toast.remove();
+                }, 500);
+            }
+        }
+    </script>
+
     <!-- Toast Notification for Success -->
     @if (session('success'))
         <div id="successToast"
@@ -35,8 +62,8 @@
     <!-- Toast Notification for Errors -->
     @if (session('error') || $errors->any())
         <div id="errorToast"
-            class="fixed top-6 right-6 z-[200] transform translate-x-[400px] transition-transform duration-500 ease-out">
-            <div class="bg-white rounded-xl shadow-2xl border-l-4 border-red-500 p-4 min-w-[320px] max-w-md">
+            class="fixed top-6 right-6 z-[200] transform translate-x-[400px] transition-transform duration-500 ease-out max-w-md">
+            <div class="bg-white rounded-xl shadow-2xl border-l-4 border-red-500 p-4">
                 <div class="flex items-start gap-3">
                     <div class="bg-red-100 p-2 rounded-lg shrink-0">
                         <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,13 +71,13 @@
                                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <div class="flex-1">
+                    <div class="flex-1 max-h-[400px] overflow-y-auto">
                         <h4 class="text-sm font-bold text-gray-900 mb-1">Gagal!</h4>
                         @if (session('error'))
-                            <p class="text-sm text-gray-600">{{ session('error') }}</p>
+                            <p class="text-sm text-gray-600">{{ Str::limit(session('error'), 200) }}</p>
                         @endif
                         @if ($errors->any())
-                            <div class="text-sm text-gray-600 space-y-1">
+                            <div class="text-sm text-gray-600 space-y-1 mt-2">
                                 @foreach ($errors->all() as $error)
                                     <p>• {{ $error }}</p>
                                 @endforeach
@@ -71,33 +98,6 @@
             showToast('errorToast');
         </script>
     @endif
-
-    <script>
-        function showToast(toastId) {
-            setTimeout(() => {
-                const toast = document.getElementById(toastId);
-                if (toast) {
-                    toast.classList.remove('translate-x-[400px]');
-                    toast.classList.add('translate-x-0');
-                }
-            }, 100);
-
-            setTimeout(() => {
-                closeToast(toastId);
-            }, 5000);
-        }
-
-        function closeToast(toastId) {
-            const toast = document.getElementById(toastId);
-            if (toast) {
-                toast.classList.remove('translate-x-0');
-                toast.classList.add('translate-x-[400px]');
-                setTimeout(() => {
-                    toast.remove();
-                }, 500);
-            }
-        }
-    </script>
 
     <div class="mb-6">
         <div class="flex items-center gap-3 mb-2">
@@ -336,48 +336,48 @@
 
                 <!-- TEMPORARY: Image features disabled for testing -->
                 <!--
-                                    @if ($tempatWisata->images->isNotEmpty())
+                                        @if ($tempatWisata->images->isNotEmpty())
     <div class="mb-8">
-                                            <label class="block text-sm font-semibold text-gray-700 mb-3">
-                                                Gambar Saat Ini
-                                            </label>
-                                            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                                                @foreach ($tempatWisata->images as $image)
+                                                <label class="block text-sm font-semibold text-gray-700 mb-3">
+                                                    Gambar Saat Ini
+                                                </label>
+                                                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                                    @foreach ($tempatWisata->images as $image)
     <div class="relative group">
-                                                        <img src="{{ $image->image_url }}" alt="{{ $image->caption }}"
-                                                            class="w-full h-32 object-cover rounded-lg border-2 border-gray-200">
-                                                        @if ($image->is_primary)
+                                                            <img src="{{ $image->image_url }}" alt="{{ $image->caption }}"
+                                                                class="w-full h-32 object-cover rounded-lg border-2 border-gray-200">
+                                                            @if ($image->is_primary)
     <div
-                                                                class="absolute top-2 left-2 bg-emerald-500 text-white px-2 py-1 rounded text-xs font-semibold">
-                                                                Utama
-                                                            </div>
+                                                                    class="absolute top-2 left-2 bg-emerald-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                                                                    Utama
+                                                                </div>
     @endif
-                                                        <label class="absolute top-2 right-2 cursor-pointer">
-                                                            <input type="checkbox" name="delete_images[]" value="{{ $image->id }}"
-                                                                class="peer sr-only">
-                                                            <div
-                                                                class="bg-white peer-checked:bg-red-500 p-1.5 rounded-full shadow-lg transition">
-                                                                <svg class="w-4 h-4 text-gray-400 peer-checked:text-white" fill="none"
-                                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                                    </path>
-                                                                </svg>
-                                                            </div>
-                                                        </label>
-                                                        @if ($image->caption)
+                                                            <label class="absolute top-2 right-2 cursor-pointer">
+                                                                <input type="checkbox" name="delete_images[]" value="{{ $image->id }}"
+                                                                    class="peer sr-only">
+                                                                <div
+                                                                    class="bg-white peer-checked:bg-red-500 p-1.5 rounded-full shadow-lg transition">
+                                                                    <svg class="w-4 h-4 text-gray-400 peer-checked:text-white" fill="none"
+                                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                            </label>
+                                                            @if ($image->caption)
     <div
-                                                                class="absolute bottom-2 left-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded truncate">
-                                                                {{ $image->caption }}
-                                                            </div>
+                                                                    class="absolute bottom-2 left-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded truncate">
+                                                                    {{ $image->caption }}
+                                                                </div>
     @endif
-                                                    </div>
+                                                        </div>
     @endforeach
+                                                </div>
+                                                <p class="text-xs text-gray-500 mt-2">Centang ikon tempat sampah untuk menghapus gambar</p>
                                             </div>
-                                            <p class="text-xs text-gray-500 mt-2">Centang ikon tempat sampah untuk menghapus gambar</p>
-                                        </div>
     @endif
-                                    -->
+                                        -->
 
                 <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                     <p class="text-sm text-blue-700">Fitur upload dan hapus gambar masih dalam pengembangan
@@ -385,28 +385,28 @@
                 </div>
 
                 <!-- TEMPORARY: Upload new images disabled for testing
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-3">
-                                        Upload Gambar Baru (Maksimal 10 gambar)
-                                    </label>
-                                    <div
-                                        class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-emerald-500 transition">
-                                        <input type="file" id="images" name="images[]" multiple accept="image/*"
-                                            onchange="previewImages(event)" class="hidden">
-                                        <label for="images" class="cursor-pointer">
-                                            <svg class="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                                </path>
-                                            </svg>
-                                            <p class="text-sm text-gray-600 mb-1">Klik untuk upload gambar</p>
-                                            <p class="text-xs text-gray-500">Format: JPEG, JPG, PNG, GIF, WEBP. Maksimal 10 MB per file</p>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-3">
+                                            Upload Gambar Baru (Maksimal 10 gambar)
                                         </label>
+                                        <div
+                                            class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-emerald-500 transition">
+                                            <input type="file" id="images" name="images[]" multiple accept="image/*"
+                                                onchange="previewImages(event)" class="hidden">
+                                            <label for="images" class="cursor-pointer">
+                                                <svg class="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                    </path>
+                                                </svg>
+                                                <p class="text-sm text-gray-600 mb-1">Klik untuk upload gambar</p>
+                                                <p class="text-xs text-gray-500">Format: JPEG, JPG, PNG, GIF, WEBP. Maksimal 10 MB per file</p>
+                                            </label>
+                                        </div>
+                                        <div id="imagePreview" class="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4 hidden"></div>
                                     </div>
-                                    <div id="imagePreview" class="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4 hidden"></div>
-                                </div>
-                                -->
+                                    -->
             </div>
 
             <!-- Tab 4: Jam Operasional -->

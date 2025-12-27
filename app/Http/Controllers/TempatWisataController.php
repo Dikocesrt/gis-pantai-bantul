@@ -70,11 +70,26 @@ class TempatWisataController extends Controller
             
             DB::beginTransaction();
 
-            // Generate slug
+            // Generate slug (check for existing slug including soft deleted)
             $slug = Str::slug($request->name);
-            $slugCount = TempatWisata::where('slug', 'like', $slug . '%')->count();
-            if ($slugCount > 0) {
-                $slug = $slug . '-' . ($slugCount + 1);
+            
+            // Check if slug exists (including soft deleted)
+            $existingWithSlug = TempatWisata::withTrashed()
+                ->where('slug', $slug)
+                ->first();
+            
+            if ($existingWithSlug) {
+                // If exists and soft deleted, rename the old slug to free it up
+                if ($existingWithSlug->trashed()) {
+                    $existingWithSlug->slug = $slug . '-deleted-' . time();
+                    $existingWithSlug->save();
+                } else {
+                    // If exists and not deleted, generate new slug with number
+                    $slugCount = TempatWisata::withTrashed()
+                        ->where('slug', 'like', $slug . '%')
+                        ->count();
+                    $slug = $slug . '-' . $slugCount;
+                }
             }
 
             \Log::info('Creating tempat wisata', ['slug' => $slug]);
@@ -145,9 +160,16 @@ class TempatWisataController extends Controller
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
+            
+            // Simplify error message for user
+            $errorMessage = 'Gagal menambahkan tempat wisata.';
+            if (str_contains($e->getMessage(), 'Duplicate entry')) {
+                $errorMessage = 'Nama tempat wisata sudah terdaftar. Silakan gunakan nama lain.';
+            }
+            
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Gagal menambahkan tempat wisata: ' . $e->getMessage());
+                ->with('error', $errorMessage);
         }
     }
 
@@ -191,11 +213,26 @@ class TempatWisataController extends Controller
             $slug = $tempatWisata->slug;
             if ($request->name !== $tempatWisata->name) {
                 $slug = Str::slug($request->name);
-                $slugCount = TempatWisata::where('slug', 'like', $slug . '%')
+                
+                // Check if slug exists (including soft deleted, but exclude current record)
+                $existingWithSlug = TempatWisata::withTrashed()
+                    ->where('slug', $slug)
                     ->where('id', '!=', $id)
-                    ->count();
-                if ($slugCount > 0) {
-                    $slug = $slug . '-' . ($slugCount + 1);
+                    ->first();
+                
+                if ($existingWithSlug) {
+                    // If exists and soft deleted, rename the old slug to free it up
+                    if ($existingWithSlug->trashed()) {
+                        $existingWithSlug->slug = $slug . '-deleted-' . time();
+                        $existingWithSlug->save();
+                    } else {
+                        // If exists and not deleted, generate new slug with number
+                        $slugCount = TempatWisata::withTrashed()
+                            ->where('slug', 'like', $slug . '%')
+                            ->where('id', '!=', $id)
+                            ->count();
+                        $slug = $slug . '-' . $slugCount;
+                    }
                 }
             }
 
@@ -300,9 +337,20 @@ class TempatWisataController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('Error updating tempat wisata', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Simplify error message for user
+            $errorMessage = 'Gagal memperbarui tempat wisata.';
+            if (str_contains($e->getMessage(), 'Duplicate entry')) {
+                $errorMessage = 'Nama tempat wisata sudah terdaftar. Silakan gunakan nama lain.';
+            }
+            
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Gagal memperbarui tempat wisata. Silakan coba lagi.');
+                ->with('error', $errorMessage);
         }
     }
 
