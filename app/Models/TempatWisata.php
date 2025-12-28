@@ -51,6 +51,13 @@ class TempatWisata extends Model
         return $this->belongsToMany(Fasilitas::class, 'tempat_fasilitas');
     }
 
+    public function layanans()
+    {
+        return $this->belongsToMany(Layanan::class, 'tempat_layanans', 'tempat_wisata_id', 'layanans_id')
+            ->withPivot('price', 'price_unit', 'duration', 'is_available')
+            ->withTimestamps();
+    }
+
     public function images()
     {
         return $this->hasMany(WisataImage::class);

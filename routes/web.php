@@ -49,6 +49,12 @@ Route::middleware(['role:admin,super_admin'])->group(function () {
     Route::put('/tipe-tempat/{id}', [App\Http\Controllers\TipeTempatController::class, 'update'])->name('tipe-tempat.update');
     Route::delete('/tipe-tempat/{id}', [App\Http\Controllers\TipeTempatController::class, 'destroy'])->name('tipe-tempat.destroy');
 
+    // Layanan routes
+    Route::get('/layanans', [App\Http\Controllers\LayananController::class, 'index'])->name('layanans.index');
+    Route::post('/layanans', [App\Http\Controllers\LayananController::class, 'store'])->name('layanans.store');
+    Route::put('/layanans/{id}', [App\Http\Controllers\LayananController::class, 'update'])->name('layanans.update');
+    Route::delete('/layanans/{id}', [App\Http\Controllers\LayananController::class, 'destroy'])->name('layanans.destroy');
+
     // Tempat Wisata routes
     Route::get('/tempat-wisata', [App\Http\Controllers\TempatWisataController::class, 'index'])->name('tempat-wisata.index');
     Route::get('/tempat-wisata/create', [App\Http\Controllers\TempatWisataController::class, 'create'])->name('tempat-wisata.create');
