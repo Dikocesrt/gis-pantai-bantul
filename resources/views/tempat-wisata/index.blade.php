@@ -185,6 +185,8 @@
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Kecamatan</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Status</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Dibuat Oleh</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi
                         </th>
@@ -197,10 +199,10 @@
                             <td class="px-6 py-4">
                                 @if (isset($item->primary_image_url))
                                     <img src="{{ $item->primary_image_url }}" alt="{{ $item->name }}"
-                                        class="w-16 h-16 rounded-lg object-cover">
+                                        class="w-24 h-24 rounded-lg object-cover shadow-md">
                                 @else
-                                    <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                    <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center">
+                                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
@@ -217,6 +219,29 @@
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $item->tipeTempat?->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $item->kecamatan?->name ?? '-' }}</td>
+                            <td class="px-6 py-4">
+                                @if ($item->is_active)
+                                    <span
+                                        class="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                        Aktif
+                                    </span>
+                                @else
+                                    <span
+                                        class="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
+                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                        Tidak Aktif
+                                    </span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $item->creator?->name ?? '-' }}</td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
@@ -243,7 +268,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center">
+                            <td colspan="8" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center justify-center">
                                     <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">

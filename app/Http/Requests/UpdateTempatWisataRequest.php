@@ -47,17 +47,19 @@ class UpdateTempatWisataRequest extends FormRequest
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
             'phone' => 'nullable|string|max:20',
+            'is_active' => 'nullable|boolean',
+            
+            // Update primary image for existing images
+            'set_primary_image' => 'nullable|uuid|exists:wisata_images,id',
             
             // Fasilitas (array of IDs)
             'fasilitas' => 'nullable|array',
             'fasilitas.*' => 'uuid|exists:fasilitas,id',
             
-            // TEMPORARY: Images disabled for testing
-            // 'images' => 'nullable|array|max:10',
-            // 'images.*' => 'file|mimes:jpeg,jpg,png,gif,webp|max:10240',
-            // 'primary_image_index' => 'nullable|integer|min:0',
-            // 'captions' => 'nullable|array',
-            // 'captions.*' => 'nullable|string|max:255',
+            // Images (maksimal 5 gambar)
+            'images' => 'nullable|array|max:5',
+            'images.*' => 'file|mimes:jpeg,jpg,png,gif,webp|max:10240',
+            'primary_image_index' => 'nullable|integer|min:0|max:4',
             
             // Delete images
             'delete_images' => 'nullable|array',
@@ -86,7 +88,7 @@ class UpdateTempatWisataRequest extends FormRequest
             'longitude.between' => 'Longitude harus antara -180 dan 180',
             'images.*.mimes' => 'Format gambar harus jpeg, jpg, png, gif, atau webp',
             'images.*.max' => 'Ukuran gambar maksimal 10 MB',
-            'images.max' => 'Maksimal 10 gambar',
+            'images.max' => 'Maksimal 5 gambar',
         ];
     }
 }

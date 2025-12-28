@@ -16,8 +16,28 @@ class RegisterAdminRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', Rule::unique('users', 'email')->whereNull('deleted_at')],
-            'phone' => ['required', 'string', 'max:20', Rule::unique('users', 'phone')->whereNull('deleted_at')],
+            'email' => [
+                'required', 
+                'email',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    $exists = \App\Models\User::withTrashed()->where('email', $value)->exists();
+                    if ($exists) {
+                        $fail('Email sudah terdaftar. Silakan gunakan email lain.');
+                    }
+                },
+            ],
+            'phone' => [
+                'required', 
+                'string', 
+                'max:20',
+                function ($attribute, $value, $fail) {
+                    $exists = \App\Models\User::withTrashed()->where('phone', $value)->exists();
+                    if ($exists) {
+                        $fail('Nomor HP sudah terdaftar. Silakan gunakan nomor lain.');
+                    }
+                },
+            ],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }

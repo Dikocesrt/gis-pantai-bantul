@@ -221,6 +221,56 @@
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <!-- Status Aktif -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">
+                            Status Publikasi
+                        </label>
+                        <div class="flex items-center gap-6">
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="is_active" value="1"
+                                    {{ old('is_active', '1') == '1' ? 'checked' : '' }} class="peer sr-only">
+                                <div
+                                    class="flex items-center gap-3 px-6 py-4 border-2 border-gray-300 rounded-lg transition-all peer-checked:border-emerald-500 peer-checked:bg-emerald-50 hover:border-emerald-300">
+                                    <div class="bg-emerald-100 peer-checked:bg-emerald-500 p-2 rounded-full transition">
+                                        <svg class="w-5 h-5 text-emerald-600 peer-checked:text-white" fill="currentColor"
+                                            viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-900">Aktif</p>
+                                        <p class="text-xs text-gray-600">Tampilkan di aplikasi</p>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="is_active" value="0"
+                                    {{ old('is_active') == '0' ? 'checked' : '' }} class="peer sr-only">
+                                <div
+                                    class="flex items-center gap-3 px-6 py-4 border-2 border-gray-300 rounded-lg transition-all peer-checked:border-gray-500 peer-checked:bg-gray-50 hover:border-gray-400">
+                                    <div class="bg-gray-100 peer-checked:bg-gray-500 p-2 rounded-full transition">
+                                        <svg class="w-5 h-5 text-gray-600 peer-checked:text-white" fill="currentColor"
+                                            viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-900">Tidak Aktif</p>
+                                        <p class="text-xs text-gray-600">Sembunyikan dari aplikasi</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        @error('is_active')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
             </div>
 
@@ -329,31 +379,83 @@
                 </div>
 
                 <!-- Upload Gambar -->
-                <!-- TEMPORARY DISABLED - WILL BE ENABLED LATER
-                                                <div>
-                                                    <label class="block text-sm font-semibold text-gray-700 mb-3">
-                                                        Upload Gambar (Maksimal 10 gambar)
-                                                    </label>
-                                                    <div
-                                                        class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-emerald-500 transition">
-                                                        <input type="file" id="images" name="images[]" multiple accept="image/*"
-                                                            onchange="previewImages(event)" class="hidden">
-                                                        <label for="images" class="cursor-pointer">
-                                                            <svg class="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor"
-                                                                viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                                                </path>
-                                                            </svg>
-                                                            <p class="text-sm text-gray-600 mb-1">Klik untuk upload gambar</p>
-                                                            <p class="text-xs text-gray-500">Format: JPEG, JPG, PNG, GIF, WEBP. Maksimal 10 MB per file</p>
-                                                        </label>
-                                                    </div>
-                                                    <div id="imagePreview" class="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4 hidden"></div>
-                                                </div>
-                                                -->
-                <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p class="text-sm text-blue-700">Fitur upload gambar masih dalam pengembangan</p>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        Upload Gambar (Maksimal 5 gambar)
+                    </label>
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 mb-4">
+                        <p class="text-sm text-emerald-700 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Klik ikon bintang untuk menandai gambar utama</span>
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        @for ($i = 0; $i < 5; $i++)
+                            <div class="relative">
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg overflow-hidden hover:border-emerald-500 transition"
+                                    style="aspect-ratio: 4/3;">
+                                    <input type="file" id="image_{{ $i }}" name="images[]"
+                                        accept="image/*" onchange="previewImage({{ $i }})" class="hidden">
+
+                                    <div id="placeholder_{{ $i }}"
+                                        class="w-full h-full flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
+                                        onclick="document.getElementById('image_{{ $i }}').click()">
+                                        <svg class="w-12 h-12 text-gray-400 mb-2" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                            </path>
+                                        </svg>
+                                        <p class="text-sm text-gray-600 font-medium">Gambar {{ $i + 1 }}</p>
+                                        <p class="text-xs text-gray-500 mt-1">Klik untuk upload</p>
+                                    </div>
+
+                                    <div id="preview_{{ $i }}" class="hidden w-full h-full relative group">
+                                        <img id="img_{{ $i }}" src="" alt="Preview"
+                                            class="w-full h-full object-cover">
+
+                                        <!-- Primary Image Radio Button -->
+                                        <label class="absolute top-2 right-2 cursor-pointer z-10"
+                                            title="Tandai sebagai gambar utama">
+                                            <input type="radio" name="primary_image_index" value="{{ $i }}"
+                                                {{ $i === 0 ? 'checked' : '' }} class="peer sr-only">
+                                            <div
+                                                class="bg-white peer-checked:bg-emerald-500 p-2 rounded-full shadow-lg transition hover:scale-110">
+                                                <svg class="w-5 h-5 text-gray-400 peer-checked:text-white"
+                                                    fill="currentColor" viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                        </label>
+
+                                        <!-- Remove Button -->
+                                        <button type="button" onclick="removeImage({{ $i }})"
+                                            class="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full shadow-lg transition hover:scale-110 z-10"
+                                            title="Hapus gambar">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+
+                                        <!-- Change Image Button -->
+                                        <button type="button"
+                                            onclick="document.getElementById('image_{{ $i }}').click()"
+                                            class="absolute bottom-2 left-2 right-2 bg-black/70 hover:bg-black/80 text-white text-xs py-2 px-3 rounded transition opacity-0 group-hover:opacity-100">
+                                            Ganti Gambar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endfor
+                    </div>
                 </div>
             </div>
 
@@ -486,41 +588,42 @@
             }
         }
 
-        function previewImages(event) {
-            const preview = document.getElementById('imagePreview');
-            preview.innerHTML = '';
-            preview.classList.remove('hidden');
+        function previewImage(index) {
+            const input = document.getElementById(`image_${index}`);
+            const file = input.files[0];
 
-            const files = event.target.files;
-            let primaryIndex = 0;
-
-            for (let i = 0; i < Math.min(files.length, 10); i++) {
-                const file = files[i];
+            if (file) {
                 const reader = new FileReader();
 
                 reader.onload = function(e) {
-                    const div = document.createElement('div');
-                    div.className = 'relative group';
-                    div.innerHTML = `
-                        <img src="${e.target.result}" class="w-full h-32 object-cover rounded-lg border-2 border-gray-200">
-                        <label class="absolute top-2 right-2 cursor-pointer">
-                            <input type="radio" name="primary_image_index" value="${i}" ${i === primaryIndex ? 'checked' : ''}
-                                class="peer sr-only">
-                            <div class="bg-white peer-checked:bg-emerald-500 p-1.5 rounded-full shadow-lg transition">
-                                <svg class="w-4 h-4 text-gray-400 peer-checked:text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                </svg>
-                            </div>
-                        </label>
-                        <div class="absolute bottom-2 left-2">
-                            <input type="text" name="captions[]" placeholder="Caption (opsional)"
-                                class="text-xs px-2 py-1 bg-white/90 border border-gray-300 rounded">
-                        </div>
-                    `;
-                    preview.appendChild(div);
+                    document.getElementById(`img_${index}`).src = e.target.result;
+                    document.getElementById(`placeholder_${index}`).classList.add('hidden');
+                    document.getElementById(`preview_${index}`).classList.remove('hidden');
                 }
 
                 reader.readAsDataURL(file);
+            }
+        }
+
+        function removeImage(index) {
+            const input = document.getElementById(`image_${index}`);
+            input.value = '';
+
+            document.getElementById(`img_${index}`).src = '';
+            document.getElementById(`placeholder_${index}`).classList.remove('hidden');
+            document.getElementById(`preview_${index}`).classList.add('hidden');
+
+            // If this was the primary image, set the first available image as primary
+            const radio = document.querySelector(`input[name="primary_image_index"][value="${index}"]`);
+            if (radio && radio.checked) {
+                // Find first image that has a file
+                for (let i = 0; i < 5; i++) {
+                    const otherInput = document.getElementById(`image_${i}`);
+                    if (otherInput.files.length > 0) {
+                        document.querySelector(`input[name="primary_image_index"][value="${i}"]`).checked = true;
+                        break;
+                    }
+                }
             }
         }
     </script>

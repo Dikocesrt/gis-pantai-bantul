@@ -32,7 +32,6 @@ class TempatWisataController extends Controller
 
         $cloudName = config('filesystems.disks.cloudinary.cloud');
         
-        // Generate image URLs
         $tempatWisata->each(function ($item) use ($cloudName) {
             if ($item->images->isNotEmpty()) {
                 $item->primary_image_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->images->first()->path}";
@@ -50,12 +49,10 @@ class TempatWisataController extends Controller
         
         $cloudName = config('filesystems.disks.cloudinary.cloud');
         
-        // Generate icon URLs for tipe tempat
         $tipeTempats->each(function ($item) use ($cloudName) {
             $item->icon_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->icon}";
         });
         
-        // Generate icon URLs for fasilitas
         $fasilitas->each(function ($item) use ($cloudName) {
             $item->icon_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->icon}";
         });
@@ -70,21 +67,17 @@ class TempatWisataController extends Controller
             
             DB::beginTransaction();
 
-            // Generate slug (check for existing slug including soft deleted)
             $slug = Str::slug($request->name);
             
-            // Check if slug exists (including soft deleted)
             $existingWithSlug = TempatWisata::withTrashed()
                 ->where('slug', $slug)
                 ->first();
             
             if ($existingWithSlug) {
-                // If exists and soft deleted, rename the old slug to free it up
                 if ($existingWithSlug->trashed()) {
                     $existingWithSlug->slug = $slug . '-deleted-' . time();
                     $existingWithSlug->save();
                 } else {
-                    // If exists and not deleted, generate new slug with number
                     $slugCount = TempatWisata::withTrashed()
                         ->where('slug', 'like', $slug . '%')
                         ->count();
@@ -94,7 +87,6 @@ class TempatWisataController extends Controller
 
             \Log::info('Creating tempat wisata', ['slug' => $slug]);
 
-            // Create tempat wisata
             $tempatWisata = TempatWisata::create([
                 'id' => (string) Str::uuid(),
                 'name' => $request->name,
@@ -106,13 +98,13 @@ class TempatWisataController extends Controller
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
                 'phone' => $request->phone,
+                'is_active' => $request->is_active ?? true,
                 'created_by' => Auth::id(),
                 'updated_by' => Auth::id(),
             ]);
             
             \Log::info('Tempat wisata created', ['id' => $tempatWisata->id]);
 
-            // Attach fasilitas
             if ($request->has('fasilitas') && is_array($request->fasilitas)) {
                 \Log::info('Attaching fasilitas', ['count' => count($request->fasilitas)]);
                 foreach ($request->fasilitas as $fasilitasId) {
@@ -125,10 +117,28 @@ class TempatWisataController extends Controller
                 }
             }
 
-            // TEMPORARY: Skip image upload
-            \Log::info('Skipping image upload (disabled for testing)');
+            if ($request->hasFile('images')) {
+                \Log::info('Uploading images', ['count' => count($request->file('images'))]);
+                $prefix = config('filesystems.disks.cloudinary.prefix');
+                $folder = $prefix ? "{$prefix}/tempat-wisata" : 'tempat-wisata';
+                $primaryIndex = $request->primary_image_index ?? 0;
 
-            // Save opening hours
+                foreach ($request->file('images') as $index => $image) {
+                    $path = Storage::disk('cloudinary')->putFile($folder, $image);
+                    
+                    $isPrimary = $index == $primaryIndex;
+                    
+                    WisataImage::create([
+                        'id' => (string) Str::uuid(),
+                        'tempat_wisata_id' => $tempatWisata->id,
+                        'path' => $path,
+                        'caption' => null,
+                        'is_primary' => $isPrimary,
+                        'created_by' => Auth::id(),
+                    ]);
+                }
+            }
+
             if ($request->has('opening_hours') && is_array($request->opening_hours)) {
                 \Log::info('Saving opening hours');
                 foreach ($request->opening_hours as $hours) {
@@ -161,7 +171,6 @@ class TempatWisataController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
             
-            // Simplify error message for user
             $errorMessage = 'Gagal menambahkan tempat wisata.';
             if (str_contains($e->getMessage(), 'Duplicate entry')) {
                 $errorMessage = 'Nama tempat wisata sudah terdaftar. Silakan gunakan nama lain.';
@@ -184,17 +193,14 @@ class TempatWisataController extends Controller
         
         $cloudName = config('filesystems.disks.cloudinary.cloud');
         
-        // Generate icon URLs for tipe tempat
         $tipeTempats->each(function ($item) use ($cloudName) {
             $item->icon_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->icon}";
         });
         
-        // Generate icon URLs for fasilitas
         $fasilitas->each(function ($item) use ($cloudName) {
             $item->icon_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->icon}";
         });
         
-        // Generate image URLs
         $tempatWisata->images->each(function ($item) use ($cloudName) {
             $item->image_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->path}";
         });
@@ -209,24 +215,20 @@ class TempatWisataController extends Controller
 
             $tempatWisata = TempatWisata::findOrFail($id);
 
-            // Update slug if name changed
             $slug = $tempatWisata->slug;
             if ($request->name !== $tempatWisata->name) {
                 $slug = Str::slug($request->name);
                 
-                // Check if slug exists (including soft deleted, but exclude current record)
                 $existingWithSlug = TempatWisata::withTrashed()
                     ->where('slug', $slug)
                     ->where('id', '!=', $id)
                     ->first();
                 
                 if ($existingWithSlug) {
-                    // If exists and soft deleted, rename the old slug to free it up
                     if ($existingWithSlug->trashed()) {
                         $existingWithSlug->slug = $slug . '-deleted-' . time();
                         $existingWithSlug->save();
                     } else {
-                        // If exists and not deleted, generate new slug with number
                         $slugCount = TempatWisata::withTrashed()
                             ->where('slug', 'like', $slug . '%')
                             ->where('id', '!=', $id)
@@ -236,7 +238,6 @@ class TempatWisataController extends Controller
                 }
             }
 
-            // Update tempat wisata
             $tempatWisata->update([
                 'name' => $request->name,
                 'slug' => $slug,
@@ -247,10 +248,10 @@ class TempatWisataController extends Controller
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
                 'phone' => $request->phone,
+                'is_active' => $request->is_active ?? true,
                 'updated_by' => Auth::id(),
             ]);
 
-            // Sync fasilitas
             if ($request->has('fasilitas')) {
                 $fasilitasData = [];
                 foreach ($request->fasilitas as $fasilitasId) {
@@ -265,8 +266,12 @@ class TempatWisataController extends Controller
             } else {
                 $tempatWisata->fasilitas()->detach();
             }
+            
+            if ($request->has('set_primary_image') && $request->set_primary_image) {
+                $tempatWisata->images()->update(['is_primary' => false]);
+                $tempatWisata->images()->where('id', $request->set_primary_image)->update(['is_primary' => true]);
+            }
 
-            // Delete selected images
             if ($request->has('delete_images') && is_array($request->delete_images)) {
                 foreach ($request->delete_images as $imageId) {
                     $image = WisataImage::find($imageId);
@@ -281,17 +286,14 @@ class TempatWisataController extends Controller
                 }
             }
 
-            // Upload new images
             if ($request->hasFile('images')) {
                 $prefix = config('filesystems.disks.cloudinary.prefix');
                 $folder = $prefix ? "{$prefix}/tempat-wisata" : 'tempat-wisata';
-                $existingImagesCount = $tempatWisata->images()->count();
                 $primaryIndex = $request->primary_image_index ?? null;
 
                 foreach ($request->file('images') as $index => $image) {
                     $path = Storage::disk('cloudinary')->putFile($folder, $image);
                     
-                    // If this is set as primary, unset other primary images
                     $isPrimary = $primaryIndex !== null && $index == $primaryIndex;
                     if ($isPrimary) {
                         $tempatWisata->images()->update(['is_primary' => false]);
@@ -301,19 +303,16 @@ class TempatWisataController extends Controller
                         'id' => (string) Str::uuid(),
                         'tempat_wisata_id' => $tempatWisata->id,
                         'path' => $path,
-                        'caption' => $request->captions[$index] ?? null,
+                        'caption' => null,
                         'is_primary' => $isPrimary,
                         'created_by' => Auth::id(),
                     ]);
                 }
             }
 
-            // Update opening hours
             if ($request->has('opening_hours') && is_array($request->opening_hours)) {
-                // Delete existing opening hours
                 $tempatWisata->openingHours()->delete();
                 
-                // Create new opening hours
                 foreach ($request->opening_hours as $hours) {
                     if (!empty($hours['open_time']) || !empty($hours['close_time']) || !empty($hours['note'])) {
                         OpeningHours::create([
@@ -342,7 +341,6 @@ class TempatWisataController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
             
-            // Simplify error message for user
             $errorMessage = 'Gagal memperbarui tempat wisata.';
             if (str_contains($e->getMessage(), 'Duplicate entry')) {
                 $errorMessage = 'Nama tempat wisata sudah terdaftar. Silakan gunakan nama lain.';
@@ -361,7 +359,6 @@ class TempatWisataController extends Controller
 
             $tempatWisata = TempatWisata::findOrFail($id);
             
-            // Delete images from Cloudinary
             foreach ($tempatWisata->images as $image) {
                 try {
                     Storage::disk('cloudinary')->delete($image->path);
@@ -370,7 +367,6 @@ class TempatWisataController extends Controller
                 }
             }
             
-            // Soft delete will cascade to related models
             $tempatWisata->delete();
 
             DB::commit();

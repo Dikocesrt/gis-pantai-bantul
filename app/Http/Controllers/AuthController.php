@@ -62,17 +62,79 @@ class AuthController extends Controller
 
     public function registerAdmin(RegisterAdminRequest $request)
     {
-        User::create([
-            'id' => Str::uuid(),
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => $request->password,
-            'role' => 'admin',
-            'is_verified' => false,
-        ]);
+        try {
+            $existingEmail = User::withTrashed()->where('email', $request->email)->first();
+            if ($existingEmail) {
+                if ($existingEmail->trashed()) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['email' => 'Email ini pernah terdaftar sebelumnya dan sudah dihapus. Silakan hubungi administrator untuk mengaktifkan kembali akun Anda.']);
+                } else {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['email' => 'Email sudah terdaftar. Silakan gunakan email lain.']);
+                }
+            }
+            
+            $existingPhone = User::withTrashed()->where('phone', $request->phone)->first();
+            if ($existingPhone) {
+                if ($existingPhone->trashed()) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['phone' => 'Nomor HP ini pernah terdaftar sebelumnya dan sudah dihapus. Silakan hubungi administrator untuk mengaktifkan kembali akun Anda.']);
+                } else {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['phone' => 'Nomor HP sudah terdaftar. Silakan gunakan nomor lain.']);
+                }
+            }
 
-        return redirect()->route('auth.register-success')->with('success', 'Registrasi berhasil. Menunggu verifikasi dari admin.');
+            User::create([
+                'id' => (string) Str::uuid(),
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'password' => $request->password,
+                'role' => 'admin',
+                'is_verified' => false,
+            ]);
+
+            return redirect()->route('auth.register-success')->with('success', 'Registrasi berhasil. Menunggu verifikasi dari admin.');
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            \Log::error('Registration error', [
+                'error' => $e->getMessage(),
+                'email' => $request->email,
+                'phone' => $request->phone,
+            ]);
+            
+            if ($e->getCode() == 23000) {
+                if (str_contains($e->getMessage(), 'users_email_unique')) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['email' => 'Email sudah terdaftar. Silakan gunakan email lain.']);
+                }
+                if (str_contains($e->getMessage(), 'users_phone_unique')) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['phone' => 'Nomor HP sudah terdaftar. Silakan gunakan nomor lain.']);
+                }
+            }
+            
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat registrasi. Silakan coba lagi.');
+                
+        } catch (\Exception $e) {
+            \Log::error('Unexpected registration error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan yang tidak terduga. Silakan coba lagi.');
+        }
     }
 
     public function registerSuccess()
