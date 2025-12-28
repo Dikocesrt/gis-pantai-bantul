@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kecamatan;
 use App\Models\Fasilitas;
-use App\Models\TipeTempat;
+use App\Models\Layanan;
 use App\Models\TempatWisata;
 use Illuminate\Http\Request;
 
@@ -15,7 +15,7 @@ class DashboardController extends Controller
         $stats = [
             'kecamatan' => Kecamatan::count(),
             'fasilitas' => Fasilitas::count(),
-            'tipe_tempat' => TipeTempat::count(),
+            'layanan' => Layanan::count(),
             'tempat_wisata' => TempatWisata::count(),
         ];
 
