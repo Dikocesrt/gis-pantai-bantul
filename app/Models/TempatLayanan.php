@@ -14,7 +14,7 @@ class TempatLayanan extends Model
     protected $fillable = [
         'id',
         'tempat_wisata_id',
-        'layanans_id',
+        'layanan_id',
         'price',
         'price_unit',
         'duration',
@@ -25,7 +25,10 @@ class TempatLayanan extends Model
     protected $casts = [
         'price' => 'integer',
         'is_available' => 'boolean',
+        'created_at' => 'datetime',
     ];
+
+    public $timestamps = false;
 
     public function tempatWisata()
     {
@@ -34,6 +37,6 @@ class TempatLayanan extends Model
 
     public function layanan()
     {
-        return $this->belongsTo(Layanan::class, 'layanans_id');
+        return $this->belongsTo(Layanan::class, 'layanan_id');
     }
 }

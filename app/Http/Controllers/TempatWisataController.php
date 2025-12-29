@@ -8,12 +8,14 @@ use App\Models\TempatWisata;
 use App\Models\Kecamatan;
 use App\Models\TipeTempat;
 use App\Models\Fasilitas;
+use App\Models\Layanan;
 use App\Models\WisataImage;
 use App\Models\OpeningHours;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TempatWisataController extends Controller
 {
@@ -46,6 +48,7 @@ class TempatWisataController extends Controller
         $kecamatans = Kecamatan::orderBy('name')->get();
         $tipeTempats = TipeTempat::orderBy('name')->get();
         $fasilitas = Fasilitas::orderBy('name')->get();
+        $layanans = Layanan::orderBy('name')->get();
         
         $cloudName = config('filesystems.disks.cloudinary.cloud');
         
@@ -56,14 +59,18 @@ class TempatWisataController extends Controller
         $fasilitas->each(function ($item) use ($cloudName) {
             $item->icon_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->icon}";
         });
+        
+        $layanans->each(function ($item) use ($cloudName) {
+            $item->icon_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->icon}";
+        });
 
-        return view('tempat-wisata.create', compact('kecamatans', 'tipeTempats', 'fasilitas'));
+        return view('tempat-wisata.create', compact('kecamatans', 'tipeTempats', 'fasilitas', 'layanans'));
     }
 
     public function store(StoreTempatWisataRequest $request)
     {
         try {
-            \Log::info('Store method called', ['data' => $request->all()]);
+            Log::info('Store method called', ['data' => $request->all()]);
             
             DB::beginTransaction();
 
@@ -85,7 +92,7 @@ class TempatWisataController extends Controller
                 }
             }
 
-            \Log::info('Creating tempat wisata', ['slug' => $slug]);
+            Log::info('Creating tempat wisata', ['slug' => $slug]);
 
             $tempatWisata = TempatWisata::create([
                 'id' => (string) Str::uuid(),
@@ -103,10 +110,10 @@ class TempatWisataController extends Controller
                 'updated_by' => Auth::id(),
             ]);
             
-            \Log::info('Tempat wisata created', ['id' => $tempatWisata->id]);
+            Log::info('Tempat wisata created', ['id' => $tempatWisata->id]);
 
             if ($request->has('fasilitas') && is_array($request->fasilitas)) {
-                \Log::info('Attaching fasilitas', ['count' => count($request->fasilitas)]);
+                Log::info('Attaching fasilitas', ['count' => count($request->fasilitas)]);
                 foreach ($request->fasilitas as $fasilitasId) {
                     $tempatWisata->fasilitas()->attach($fasilitasId, [
                         'id' => (string) Str::uuid(),
@@ -117,8 +124,23 @@ class TempatWisataController extends Controller
                 }
             }
 
+            if ($request->has('layanans') && is_array($request->layanans)) {
+                Log::info('Attaching layanans', ['count' => count($request->layanans)]);
+                foreach ($request->layanans as $layananId) {
+                    $tempatWisata->layanans()->attach($layananId, [
+                        'id' => (string) Str::uuid(),
+                        'price' => $request->layanan_price[$layananId] ?? null,
+                        'price_unit' => $request->layanan_price_unit[$layananId] ?? null,
+                        'duration' => $request->layanan_duration[$layananId] ?? null,
+                        'is_available' => isset($request->layanan_is_available[$layananId]) ? (bool)$request->layanan_is_available[$layananId] : true,
+                        'created_by' => Auth::id(),
+                        'created_at' => now(),
+                    ]);
+                }
+            }
+
             if ($request->hasFile('images')) {
-                \Log::info('Uploading images', ['count' => count($request->file('images'))]);
+                Log::info('Uploading images', ['count' => count($request->file('images'))]);
                 $prefix = config('filesystems.disks.cloudinary.prefix');
                 $folder = $prefix ? "{$prefix}/tempat-wisata" : 'tempat-wisata';
                 $primaryIndex = $request->primary_image_index ?? 0;
@@ -140,7 +162,7 @@ class TempatWisataController extends Controller
             }
 
             if ($request->has('opening_hours') && is_array($request->opening_hours)) {
-                \Log::info('Saving opening hours');
+                Log::info('Saving opening hours');
                 foreach ($request->opening_hours as $hours) {
                     if (!empty($hours['open_time']) || !empty($hours['close_time']) || !empty($hours['note'])) {
                         OpeningHours::create([
@@ -159,14 +181,14 @@ class TempatWisataController extends Controller
 
             DB::commit();
             
-            \Log::info('Transaction committed successfully');
+            Log::info('Transaction committed successfully');
 
             return redirect()->route('tempat-wisata.index')
                 ->with('success', 'Tempat wisata berhasil ditambahkan');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Error creating tempat wisata', [
+            Log::error('Error creating tempat wisata', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -184,12 +206,13 @@ class TempatWisataController extends Controller
 
     public function edit($id)
     {
-        $tempatWisata = TempatWisata::with(['fasilitas', 'images', 'openingHours'])
+        $tempatWisata = TempatWisata::with(['fasilitas', 'layanans', 'images', 'openingHours'])
             ->findOrFail($id);
         
         $kecamatans = Kecamatan::orderBy('name')->get();
         $tipeTempats = TipeTempat::orderBy('name')->get();
         $fasilitas = Fasilitas::orderBy('name')->get();
+        $layanans = Layanan::orderBy('name')->get();
         
         $cloudName = config('filesystems.disks.cloudinary.cloud');
         
@@ -201,11 +224,15 @@ class TempatWisataController extends Controller
             $item->icon_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->icon}";
         });
         
+        $layanans->each(function ($item) use ($cloudName) {
+            $item->icon_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->icon}";
+        });
+        
         $tempatWisata->images->each(function ($item) use ($cloudName) {
             $item->image_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->path}";
         });
 
-        return view('tempat-wisata.edit', compact('tempatWisata', 'kecamatans', 'tipeTempats', 'fasilitas'));
+        return view('tempat-wisata.edit', compact('tempatWisata', 'kecamatans', 'tipeTempats', 'fasilitas', 'layanans'));
     }
 
     public function update(UpdateTempatWisataRequest $request, $id)
@@ -267,6 +294,24 @@ class TempatWisataController extends Controller
                 $tempatWisata->fasilitas()->detach();
             }
             
+            if ($request->has('layanans')) {
+                $layananData = [];
+                foreach ($request->layanans as $layananId) {
+                    $layananData[$layananId] = [
+                        'id' => (string) Str::uuid(),
+                        'price' => $request->layanan_price[$layananId] ?? null,
+                        'price_unit' => $request->layanan_price_unit[$layananId] ?? null,
+                        'duration' => $request->layanan_duration[$layananId] ?? null,
+                        'is_available' => isset($request->layanan_is_available[$layananId]) ? (bool)$request->layanan_is_available[$layananId] : true,
+                        'created_by' => Auth::id(),
+                        'created_at' => now(),
+                    ];
+                }
+                $tempatWisata->layanans()->sync($layananData);
+            } else {
+                $tempatWisata->layanans()->detach();
+            }
+            
             if ($request->has('set_primary_image') && $request->set_primary_image) {
                 $tempatWisata->images()->update(['is_primary' => false]);
                 $tempatWisata->images()->where('id', $request->set_primary_image)->update(['is_primary' => true]);
@@ -279,7 +324,7 @@ class TempatWisataController extends Controller
                         try {
                             Storage::disk('cloudinary')->delete($image->path);
                         } catch (\Exception $e) {
-                            \Log::warning('Failed to delete image from Cloudinary: ' . $e->getMessage());
+                            Log::warning('Failed to delete image from Cloudinary: ' . $e->getMessage());
                         }
                         $image->delete();
                     }
@@ -336,7 +381,7 @@ class TempatWisataController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Error updating tempat wisata', [
+            Log::error('Error updating tempat wisata', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -363,7 +408,7 @@ class TempatWisataController extends Controller
                 try {
                     Storage::disk('cloudinary')->delete($image->path);
                 } catch (\Exception $e) {
-                    \Log::warning('Failed to delete image from Cloudinary: ' . $e->getMessage());
+                    Log::warning('Failed to delete image from Cloudinary: ' . $e->getMessage());
                 }
             }
             

@@ -111,7 +111,7 @@
         <p class="text-gray-600 ml-9">Lengkapi form untuk menambahkan tempat wisata baru</p>
     </div>
 
-    <form action="{{ route('tempat-wisata.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('tempat-wisata.store') }}" method="POST" enctype="multipart/form-data" id="tempatWisataForm">
         @csrf
 
         <!-- Tabs Navigation -->
@@ -378,6 +378,69 @@
                     </div>
                 </div>
 
+                <!-- Layanan -->
+                <div class="mb-8">
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        Layanan yang Tersedia
+                    </label>
+                    <div class="space-y-3">
+                        @foreach ($layanans as $item)
+                            <div class="border-2 border-gray-300 rounded-lg p-4 hover:border-cyan-300 transition"
+                                id="layanan_container_{{ $item->id }}">
+                                <div class="flex items-start gap-4">
+                                    <!-- Checkbox & Icon -->
+                                    <label class="flex items-center gap-3 cursor-pointer flex-shrink-0">
+                                        <input type="checkbox" name="layanans[]" value="{{ $item->id }}"
+                                            {{ in_array($item->id, old('layanans', [])) ? 'checked' : '' }}
+                                            onchange="toggleLayananFields('{{ $item->id }}')"
+                                            class="w-5 h-5 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500">
+                                        <img src="{{ $item->icon_url }}" alt="{{ $item->name }}"
+                                            class="w-10 h-10 object-contain">
+                                        <span class="text-sm font-semibold text-gray-900">{{ $item->name }}</span>
+                                    </label>
+
+                                    <!-- Fields (hidden by default) -->
+                                    <div id="layanan_fields_{{ $item->id }}"
+                                        class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3 {{ in_array($item->id, old('layanans', [])) ? '' : 'hidden' }}">
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-600 mb-1">Harga</label>
+                                            <input type="number" name="layanan_price[{{ $item->id }}]"
+                                                value="{{ old('layanan_price.' . $item->id) }}" min="0"
+                                                placeholder="0"
+                                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-600 mb-1">Satuan</label>
+                                            <input type="text" name="layanan_price_unit[{{ $item->id }}]"
+                                                value="{{ old('layanan_price_unit.' . $item->id) }}"
+                                                placeholder="per jam"
+                                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-600 mb-1">Durasi</label>
+                                            <input type="text" name="layanan_duration[{{ $item->id }}]"
+                                                value="{{ old('layanan_duration.' . $item->id) }}" placeholder="1 jam"
+                                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                                            <select name="layanan_is_available[{{ $item->id }}]"
+                                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none">
+                                                <option value="1"
+                                                    {{ old('layanan_is_available.' . $item->id, '1') == '1' ? 'selected' : '' }}>
+                                                    Tersedia</option>
+                                                <option value="0"
+                                                    {{ old('layanan_is_available.' . $item->id) == '0' ? 'selected' : '' }}>
+                                                    Tidak Tersedia</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
                 <!-- Upload Gambar -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-3">
@@ -584,9 +647,78 @@
             const newTab = currentTab + direction;
 
             if (newTab >= 0 && newTab < tabs.length) {
+                // Validate current tab before moving forward
+                if (direction > 0 && !validateCurrentTab()) {
+                    return;
+                }
                 switchTab(newTab);
             }
         }
+
+        function validateCurrentTab() {
+            const tabs = document.getElementsByClassName("tab-content");
+            const currentTabElement = tabs[currentTab];
+            const requiredFields = currentTabElement.querySelectorAll('[required]');
+            let isValid = true;
+            let firstInvalidField = null;
+
+            requiredFields.forEach(field => {
+                // Remove previous error styling
+                field.classList.remove('border-red-500');
+                const errorMsg = field.parentElement.querySelector('.error-message');
+                if (errorMsg) errorMsg.remove();
+
+                // Check if field is valid
+                if (!field.value || (field.type === 'radio' && !currentTabElement.querySelector(
+                        `input[name="${field.name}"]:checked`))) {
+                    isValid = false;
+                    if (!firstInvalidField) firstInvalidField = field;
+
+                    // Add error styling
+                    field.classList.add('border-red-500');
+
+                    // Add error message
+                    const errorDiv = document.createElement('p');
+                    errorDiv.className = 'error-message mt-2 text-sm text-red-600';
+                    errorDiv.textContent = 'Field ini wajib diisi';
+                    field.parentElement.appendChild(errorDiv);
+                }
+            });
+
+            // Check radio buttons for tipe_tempat
+            if (currentTab === 0) {
+                const tipeTempatChecked = currentTabElement.querySelector('input[name="tipe_tempat_id"]:checked');
+                if (!tipeTempatChecked) {
+                    isValid = false;
+                    const tipeTempatContainer = currentTabElement.querySelector('input[name="tipe_tempat_id"]').closest(
+                        'div').parentElement;
+                    const existingError = tipeTempatContainer.querySelector('.error-message');
+                    if (!existingError) {
+                        const errorDiv = document.createElement('p');
+                        errorDiv.className = 'error-message mt-2 text-sm text-red-600';
+                        errorDiv.textContent = 'Silakan pilih tipe tempat';
+                        tipeTempatContainer.appendChild(errorDiv);
+                    }
+                }
+            }
+
+            if (!isValid && firstInvalidField) {
+                firstInvalidField.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+
+            return isValid;
+        }
+
+        // Form submission validation
+        document.getElementById('tempatWisataForm').addEventListener('submit', function(e) {
+            if (!validateCurrentTab()) {
+                e.preventDefault();
+                return false;
+            }
+        });
 
         function previewImage(index) {
             const input = document.getElementById(`image_${index}`);
@@ -624,6 +756,33 @@
                         break;
                     }
                 }
+            }
+        }
+
+        function toggleLayananFields(layananId) {
+            const checkbox = document.querySelector(`input[name="layanans[]"][value="${layananId}"]`);
+            const fields = document.getElementById(`layanan_fields_${layananId}`);
+            const container = document.getElementById(`layanan_container_${layananId}`);
+
+            if (checkbox.checked) {
+                fields.classList.remove('hidden');
+                container.classList.add('border-cyan-500', 'bg-cyan-50');
+                container.classList.remove('border-gray-300');
+            } else {
+                fields.classList.add('hidden');
+                container.classList.remove('border-cyan-500', 'bg-cyan-50');
+                container.classList.add('border-gray-300');
+
+                // Clear field values when unchecked
+                fields.querySelectorAll('input, select').forEach(input => {
+                    if (input.type === 'number') {
+                        input.value = '';
+                    } else if (input.tagName === 'SELECT') {
+                        input.value = '1';
+                    } else {
+                        input.value = '';
+                    }
+                });
             }
         }
     </script>

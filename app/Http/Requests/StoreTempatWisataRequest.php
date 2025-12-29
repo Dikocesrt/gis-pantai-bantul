@@ -34,6 +34,18 @@ class StoreTempatWisataRequest extends FormRequest
             'fasilitas' => 'nullable|array',
             'fasilitas.*' => 'uuid|exists:fasilitas,id',
             
+            // Layanan (array of IDs with details)
+            'layanans' => 'nullable|array',
+            'layanans.*' => 'uuid|exists:layanans,id',
+            'layanan_price' => 'nullable|array',
+            'layanan_price.*' => 'nullable|integer|min:0',
+            'layanan_price_unit' => 'nullable|array',
+            'layanan_price_unit.*' => 'nullable|string|max:50',
+            'layanan_duration' => 'nullable|array',
+            'layanan_duration.*' => 'nullable|string|max:100',
+            'layanan_is_available' => 'nullable|array',
+            'layanan_is_available.*' => 'nullable|boolean',
+            
             // Images (maksimal 5 gambar)
             'images' => 'nullable|array|max:5',
             'images.*' => 'file|mimes:jpeg,jpg,png,gif,webp|max:10240',

@@ -24,9 +24,8 @@ class Layanan extends Model
 
     public function tempatWisata()
     {
-        return $this->belongsToMany(TempatWisata::class, 'tempat_layanans')
-            ->withPivot('price', 'price_unit', 'duration', 'is_available', 'note')
-            ->withTimestamps();
+        return $this->belongsToMany(TempatWisata::class, 'tempat_layanans', 'layanan_id', 'tempat_wisata_id')
+            ->withPivot('price', 'price_unit', 'duration', 'is_available');
     }
 
     public function creator()
