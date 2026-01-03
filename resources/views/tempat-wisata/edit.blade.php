@@ -358,6 +358,133 @@
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <!-- Divider -->
+                    <div class="border-t border-gray-200 my-4"></div>
+                    <h4 class="text-lg font-bold text-gray-900 mb-4">Informasi Kondisi Pantai</h4>
+
+                    <!-- Grid 2 Columns for Beach Info -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Safety Level -->
+                        <div>
+                            <label for="safety_level" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Tingkat Keamanan
+                            </label>
+                            <select id="safety_level" name="safety_level"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
+                                <option value="">Pilih Tingkat Keamanan</option>
+                                @foreach (\App\Models\TempatWisata::SAFETY_LEVELS as $key => $value)
+                                    <option value="{{ $key }}"
+                                        {{ old('safety_level', $tempatWisata->safety_level) == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('safety_level')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Cleanliness Level -->
+                        <div>
+                            <label for="cleanliness_level" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Tingkat Kebersihan
+                            </label>
+                            <select id="cleanliness_level" name="cleanliness_level"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
+                                <option value="">Pilih Tingkat Kebersihan</option>
+                                @foreach (\App\Models\TempatWisata::CLEANLINESS_LEVELS as $key => $value)
+                                    <option value="{{ $key }}"
+                                        {{ old('cleanliness_level', $tempatWisata->cleanliness_level) == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('cleanliness_level')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Road Accessibility -->
+                        <div>
+                            <label for="road_accessibility" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Aksesibilitas Jalan
+                            </label>
+                            <select id="road_accessibility" name="road_accessibility"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
+                                <option value="">Pilih Aksesibilitas Jalan</option>
+                                @foreach (\App\Models\TempatWisata::ROAD_ACCESSIBILITY as $key => $value)
+                                    <option value="{{ $key }}"
+                                        {{ old('road_accessibility', $tempatWisata->road_accessibility) == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('road_accessibility')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Wave Condition -->
+                        <div>
+                            <label for="wave_condition" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Kondisi Ombak
+                            </label>
+                            <select id="wave_condition" name="wave_condition"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
+                                <option value="">Pilih Kondisi Ombak</option>
+                                @foreach (\App\Models\TempatWisata::WAVE_CONDITIONS as $key => $value)
+                                    <option value="{{ $key }}"
+                                        {{ old('wave_condition', $tempatWisata->wave_condition) == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('wave_condition')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Beach Characteristic -->
+                        <div>
+                            <label for="beach_characteristic" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Karakteristik Pantai
+                            </label>
+                            <select id="beach_characteristic" name="beach_characteristic"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
+                                <option value="">Pilih Karakteristik Pantai</option>
+                                @foreach (\App\Models\TempatWisata::BEACH_CHARACTERISTICS as $key => $value)
+                                    <option value="{{ $key }}"
+                                        {{ old('beach_characteristic', $tempatWisata->beach_characteristic) == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('beach_characteristic')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Environment Comfort -->
+                        <div>
+                            <label for="environment_comfort" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Kenyamanan Lingkungan
+                            </label>
+                            <select id="environment_comfort" name="environment_comfort"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
+                                <option value="">Pilih Kenyamanan Lingkungan</option>
+                                @foreach (\App\Models\TempatWisata::ENVIRONMENT_COMFORT as $key => $value)
+                                    <option value="{{ $key }}"
+                                        {{ old('environment_comfort', $tempatWisata->environment_comfort) == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('environment_comfort')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
             </div>
 

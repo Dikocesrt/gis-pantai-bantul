@@ -77,6 +77,147 @@
                         </div>
                     </div>
 
+                    <!-- Informasi Kondisi Pantai -->
+                    @if (
+                        $tempatWisata->safety_level ||
+                            $tempatWisata->cleanliness_level ||
+                            $tempatWisata->road_accessibility ||
+                            $tempatWisata->wave_condition ||
+                            $tempatWisata->beach_characteristic ||
+                            $tempatWisata->environment_comfort)
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Informasi Kondisi Pantai
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                @if ($tempatWisata->safety_level)
+                                    <div
+                                        class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-emerald-50 transition">
+                                        <div class="bg-emerald-100 p-2 rounded-lg shrink-0">
+                                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-medium text-gray-600 mb-1">Tingkat Keamanan</p>
+                                            <p class="text-sm font-bold text-gray-900">
+                                                {{ \App\Models\TempatWisata::SAFETY_LEVELS[$tempatWisata->safety_level] ?? $tempatWisata->safety_level }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if ($tempatWisata->cleanliness_level)
+                                    <div
+                                        class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-emerald-50 transition">
+                                        <div class="bg-emerald-100 p-2 rounded-lg shrink-0">
+                                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-medium text-gray-600 mb-1">Tingkat Kebersihan</p>
+                                            <p class="text-sm font-bold text-gray-900">
+                                                {{ \App\Models\TempatWisata::CLEANLINESS_LEVELS[$tempatWisata->cleanliness_level] ?? $tempatWisata->cleanliness_level }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if ($tempatWisata->road_accessibility)
+                                    <div
+                                        class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-emerald-50 transition">
+                                        <div class="bg-emerald-100 p-2 rounded-lg shrink-0">
+                                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-medium text-gray-600 mb-1">Aksesibilitas Jalan</p>
+                                            <p class="text-sm font-bold text-gray-900">
+                                                {{ \App\Models\TempatWisata::ROAD_ACCESSIBILITY[$tempatWisata->road_accessibility] ?? $tempatWisata->road_accessibility }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if ($tempatWisata->wave_condition)
+                                    <div
+                                        class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-emerald-50 transition">
+                                        <div class="bg-emerald-100 p-2 rounded-lg shrink-0">
+                                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-medium text-gray-600 mb-1">Kondisi Ombak</p>
+                                            <p class="text-sm font-bold text-gray-900">
+                                                {{ \App\Models\TempatWisata::WAVE_CONDITIONS[$tempatWisata->wave_condition] ?? $tempatWisata->wave_condition }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if ($tempatWisata->beach_characteristic)
+                                    <div
+                                        class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-emerald-50 transition">
+                                        <div class="bg-emerald-100 p-2 rounded-lg shrink-0">
+                                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-medium text-gray-600 mb-1">Karakteristik Pantai</p>
+                                            <p class="text-sm font-bold text-gray-900">
+                                                {{ \App\Models\TempatWisata::BEACH_CHARACTERISTICS[$tempatWisata->beach_characteristic] ?? $tempatWisata->beach_characteristic }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if ($tempatWisata->environment_comfort)
+                                    <div
+                                        class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-emerald-50 transition">
+                                        <div class="bg-emerald-100 p-2 rounded-lg shrink-0">
+                                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-medium text-gray-600 mb-1">Kenyamanan Lingkungan</p>
+                                            <p class="text-sm font-bold text-gray-900">
+                                                {{ \App\Models\TempatWisata::ENVIRONMENT_COMFORT[$tempatWisata->environment_comfort] ?? $tempatWisata->environment_comfort }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+
                     <!-- Fasilitas -->
                     @if ($tempatWisata->fasilitas->count() > 0)
                         <div class="bg-white rounded-xl shadow-lg p-6">

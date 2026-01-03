@@ -25,6 +25,12 @@ class TempatWisata extends Model
         'latitude',
         'longitude',
         'phone',
+        'safety_level',
+        'cleanliness_level',
+        'road_accessibility',
+        'wave_condition',
+        'beach_characteristic',
+        'environment_comfort',
         'is_active',
         'created_by',
         'updated_by',
@@ -34,6 +40,43 @@ class TempatWisata extends Model
         'latitude' => 'decimal:7',
         'longitude' => 'decimal:7',
         'is_active' => 'boolean',
+    ];
+
+    // Constants for dropdown options
+    const SAFETY_LEVELS = [
+        'aman' => 'Aman',
+        'cukup_aman' => 'Cukup Aman',
+        'kurang_aman' => 'Kurang Aman',
+    ];
+
+    const CLEANLINESS_LEVELS = [
+        'bersih' => 'Bersih',
+        'cukup_bersih' => 'Cukup Bersih',
+        'kurang_bersih' => 'Kurang Bersih',
+    ];
+
+    const ROAD_ACCESSIBILITY = [
+        'mudah_diakses' => 'Mudah Diakses',
+        'cukup_mudah' => 'Cukup Mudah',
+        'sulit_diakses' => 'Sulit Diakses',
+    ];
+
+    const WAVE_CONDITIONS = [
+        'tenang' => 'Tenang',
+        'sedang' => 'Sedang',
+        'besar' => 'Besar',
+    ];
+
+    const BEACH_CHARACTERISTICS = [
+        'berpasir' => 'Berpasir',
+        'berkarang' => 'Berkarang',
+        'berpasir_dan_berkarang' => 'Berpasir dan Berkarang',
+    ];
+
+    const ENVIRONMENT_COMFORT = [
+        'nyaman' => 'Nyaman',
+        'cukup_nyaman' => 'Cukup Nyaman',
+        'kurang_nyaman' => 'Kurang Nyaman',
     ];
 
     public function kecamatan()

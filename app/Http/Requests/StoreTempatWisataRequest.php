@@ -30,6 +30,14 @@ class StoreTempatWisataRequest extends FormRequest
             'phone' => 'nullable|string|max:20',
             'is_active' => 'nullable|boolean',
             
+            // Beach Information Fields
+            'safety_level' => 'nullable|string|in:aman,cukup_aman,kurang_aman',
+            'cleanliness_level' => 'nullable|string|in:bersih,cukup_bersih,kurang_bersih',
+            'road_accessibility' => 'nullable|string|in:mudah_diakses,cukup_mudah,sulit_diakses',
+            'wave_condition' => 'nullable|string|in:tenang,sedang,besar',
+            'beach_characteristic' => 'nullable|string|in:berpasir,berkarang,berpasir_dan_berkarang',
+            'environment_comfort' => 'nullable|string|in:nyaman,cukup_nyaman,kurang_nyaman',
+            
             // Fasilitas (array of IDs)
             'fasilitas' => 'nullable|array',
             'fasilitas.*' => 'uuid|exists:fasilitas,id',
@@ -75,6 +83,12 @@ class StoreTempatWisataRequest extends FormRequest
             'images.*.mimes' => 'Format gambar harus jpeg, jpg, png, gif, atau webp',
             'images.*.max' => 'Ukuran gambar maksimal 10 MB',
             'images.max' => 'Maksimal 5 gambar',
+            'safety_level.in' => 'Tingkat keamanan tidak valid',
+            'cleanliness_level.in' => 'Tingkat kebersihan tidak valid',
+            'road_accessibility.in' => 'Aksesibilitas jalan tidak valid',
+            'wave_condition.in' => 'Kondisi ombak tidak valid',
+            'beach_characteristic.in' => 'Karakteristik pantai tidak valid',
+            'environment_comfort.in' => 'Kenyamanan lingkungan tidak valid',
         ];
     }
 }
