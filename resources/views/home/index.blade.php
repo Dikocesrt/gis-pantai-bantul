@@ -344,6 +344,21 @@
             filter: saturate(1.1) brightness(1.05);
         }
 
+        /* Fix z-index for map container */
+        #map {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Ensure map panes don't overlap navbar */
+        .leaflet-pane {
+            z-index: auto !important;
+        }
+
+        .leaflet-map-pane {
+            z-index: 1 !important;
+        }
+
         /* Fix marker container */
         .custom-marker {
             background: transparent !important;
@@ -376,6 +391,22 @@
         .leaflet-popup-tip-container {
             display: none;
         }
+
+        /* Kecamatan popup styling */
+        .kecamatan-popup .leaflet-popup-content-wrapper {
+            background: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .kecamatan-popup .leaflet-popup-content {
+            margin: 0;
+            min-width: 120px;
+        }
+
+        /* Polygon hover cursor */
+        .leaflet-interactive {
+            cursor: pointer;
+        }
     </style>
 @endpush
 
@@ -393,6 +424,73 @@
             subdomains: 'abcd',
             maxZoom: 19
         }).addTo(map);
+
+        // Render Kecamatan Boundaries (Polygons)
+        const kecamatansWithBoundary = @json($kecamatansWithBoundary);
+        const boundaryLayers = {};
+
+        kecamatansWithBoundary.forEach(kecamatan => {
+            if (kecamatan.boundary_geojson) {
+                try {
+                    const geojson = JSON.parse(kecamatan.boundary_geojson);
+                    const color = kecamatan.color || '#10b981';
+
+                    const layer = L.geoJSON(geojson, {
+                        style: {
+                            color: color,
+                            weight: 2,
+                            opacity: 0.8,
+                            fillColor: color,
+                            fillOpacity: 0.1
+                        },
+                        onEachFeature: function(feature, layer) {
+                            // Add popup with kecamatan name
+                            layer.bindPopup(`
+                                <div class="text-center p-2">
+                                    <p class="font-bold text-gray-900">${kecamatan.name}</p>
+                                </div>
+                            `, {
+                                className: 'kecamatan-popup'
+                            });
+
+                            // Hover effect
+                            layer.on('mouseover', function(e) {
+                                this.setStyle({
+                                    weight: 3,
+                                    fillOpacity: 0.2
+                                });
+                            });
+
+                            layer.on('mouseout', function(e) {
+                                this.setStyle({
+                                    weight: 2,
+                                    fillOpacity: 0.1
+                                });
+                            });
+
+                            // Click to zoom
+                            layer.on('click', function(e) {
+                                if (kecamatan.center_lat && kecamatan.center_lng) {
+                                    map.setView([kecamatan.center_lat, kecamatan.center_lng],
+                                        13, {
+                                            animate: true,
+                                            duration: 1
+                                        });
+                                } else {
+                                    map.fitBounds(e.target.getBounds(), {
+                                        padding: [50, 50]
+                                    });
+                                }
+                            });
+                        }
+                    }).addTo(map);
+
+                    boundaryLayers[kecamatan.id] = layer;
+                } catch (error) {
+                    console.error('Error parsing GeoJSON for', kecamatan.name, error);
+                }
+            }
+        });
 
         // Custom icon with gradient
         const customIcon = L.divIcon({

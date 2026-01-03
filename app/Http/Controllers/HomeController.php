@@ -82,6 +82,21 @@ class HomeController extends Controller
         $fasilitas = Fasilitas::orderBy('name')->get();
         $layanans = Layanan::orderBy('name')->get();
 
+        // Prepare kecamatan data with boundaries for map
+        $kecamatansWithBoundary = Kecamatan::whereNotNull('boundary_geojson')
+            ->orderBy('name')
+            ->get()
+            ->map(function($kecamatan) {
+                return [
+                    'id' => $kecamatan->id,
+                    'name' => $kecamatan->name,
+                    'boundary_geojson' => $kecamatan->boundary_geojson,
+                    'color' => $kecamatan->color ?? '#10b981',
+                    'center_lat' => $kecamatan->center_lat,
+                    'center_lng' => $kecamatan->center_lng,
+                ];
+            });
+
         $fasilitas->each(function ($item) use ($cloudName) {
             $item->icon_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->icon}";
         });
@@ -90,7 +105,7 @@ class HomeController extends Controller
             $item->icon_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->icon}";
         });
 
-        return view('home.index', compact('tempatWisata', 'randomWisata', 'kecamatans', 'fasilitas', 'layanans'));
+        return view('home.index', compact('tempatWisata', 'randomWisata', 'kecamatans', 'kecamatansWithBoundary', 'fasilitas', 'layanans'));
     }
 
     public function list(Request $request)
