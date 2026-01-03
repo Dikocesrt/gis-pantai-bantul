@@ -41,6 +41,21 @@ class HomeController extends Controller
             });
         }
 
+        // Filter Beach Conditions (NEW)
+        if ($request->has('beach_conditions') && is_array($request->beach_conditions) && count($request->beach_conditions) > 0) {
+            $mapQuery->where(function($q) use ($request) {
+                foreach ($request->beach_conditions as $condition) {
+                    // Parse format: "field_name:value"
+                    $parts = explode(':', $condition);
+                    if (count($parts) === 2) {
+                        $field = $parts[0];
+                        $value = $parts[1];
+                        $q->orWhere($field, $value);
+                    }
+                }
+            });
+        }
+
         $tempatWisata = $mapQuery->get();
 
         $tempatWisata->each(function ($item) use ($cloudName) {
@@ -141,6 +156,21 @@ class HomeController extends Controller
                 $q->where('name', 'like', '%' . $request->search . '%')
                   ->orWhere('description', 'like', '%' . $request->search . '%')
                   ->orWhere('address', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Filter Beach Conditions (NEW)
+        if ($request->has('beach_conditions') && is_array($request->beach_conditions) && count($request->beach_conditions) > 0) {
+            $query->where(function($q) use ($request) {
+                foreach ($request->beach_conditions as $condition) {
+                    // Parse format: "field_name:value"
+                    $parts = explode(':', $condition);
+                    if (count($parts) === 2) {
+                        $field = $parts[0];
+                        $value = $parts[1];
+                        $q->orWhere($field, $value);
+                    }
+                }
             });
         }
 

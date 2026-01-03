@@ -63,7 +63,7 @@
                         </div>
 
                         <!-- Filter Inputs -->
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
                             <!-- Filter Kecamatan -->
                             <div class="relative">
                                 <button type="button" onclick="toggleDropdown('kecamatanDropdown')"
@@ -102,7 +102,7 @@
                             <div class="relative">
                                 <button type="button" onclick="toggleDropdown('fasilitasDropdown')"
                                     class="w-full px-3 py-2 bg-white/95 backdrop-blur-sm border border-white/20 rounded-lg text-left flex items-center justify-between hover:bg-white transition text-sm text-gray-700 font-medium">
-                                    <span id="fasilitasLabel">🏖️ Pilih Fasilitas</span>
+                                    <span id="fasilitasLabel">Pilih Fasilitas</span>
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -132,7 +132,7 @@
                             <div class="relative">
                                 <button type="button" onclick="toggleDropdown('layananDropdown')"
                                     class="w-full px-3 py-2 bg-white/95 backdrop-blur-sm border border-white/20 rounded-lg text-left flex items-center justify-between hover:bg-white transition text-sm text-gray-700 font-medium">
-                                    <span id="layananLabel">🎯 Pilih Layanan</span>
+                                    <span id="layananLabel">Pilih Layanan</span>
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -155,6 +155,136 @@
                                             <span class="text-sm text-gray-700">{{ $item->name }}</span>
                                         </label>
                                     @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Filter Kondisi Pantai (NEW) -->
+                            <div class="relative">
+                                <button type="button" onclick="toggleDropdown('kondisiDropdown')"
+                                    class="w-full px-3 py-2 bg-white/95 backdrop-blur-sm border border-white/20 rounded-lg text-left flex items-center justify-between hover:bg-white transition text-sm text-gray-700 font-medium">
+                                    <span id="kondisiLabel">Kondisi Pantai</span>
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <div id="kondisiDropdown"
+                                    class="hidden absolute z-[9999] w-80 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl max-h-96 overflow-y-auto">
+
+                                    <!-- Tingkat Keamanan -->
+                                    <div class="border-b border-gray-100">
+                                        <div class="px-3 py-2 bg-gray-50 sticky top-0">
+                                            <p class="text-xs font-bold text-gray-700 uppercase tracking-wide">Tingkat
+                                                Keamanan</p>
+                                        </div>
+                                        @foreach (\App\Models\TempatWisata::SAFETY_LEVELS as $key => $value)
+                                            <label
+                                                class="flex items-center gap-2 px-3 py-2 hover:bg-emerald-50 cursor-pointer transition">
+                                                <input type="checkbox" name="beach_conditions[]"
+                                                    value="safety_level:{{ $key }}"
+                                                    {{ in_array('safety_level:' . $key, request('beach_conditions', [])) ? 'checked' : '' }}
+                                                    class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                                                    onchange="updateKondisiLabel()">
+                                                <span class="text-sm text-gray-700">{{ $value }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Tingkat Kebersihan -->
+                                    <div class="border-b border-gray-100">
+                                        <div class="px-3 py-2 bg-gray-50 sticky top-0">
+                                            <p class="text-xs font-bold text-gray-700 uppercase tracking-wide">Tingkat
+                                                Kebersihan</p>
+                                        </div>
+                                        @foreach (\App\Models\TempatWisata::CLEANLINESS_LEVELS as $key => $value)
+                                            <label
+                                                class="flex items-center gap-2 px-3 py-2 hover:bg-emerald-50 cursor-pointer transition">
+                                                <input type="checkbox" name="beach_conditions[]"
+                                                    value="cleanliness_level:{{ $key }}"
+                                                    {{ in_array('cleanliness_level:' . $key, request('beach_conditions', [])) ? 'checked' : '' }}
+                                                    class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                                                    onchange="updateKondisiLabel()">
+                                                <span class="text-sm text-gray-700">{{ $value }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Aksesibilitas Jalan -->
+                                    <div class="border-b border-gray-100">
+                                        <div class="px-3 py-2 bg-gray-50 sticky top-0">
+                                            <p class="text-xs font-bold text-gray-700 uppercase tracking-wide">
+                                                Aksesibilitas Jalan</p>
+                                        </div>
+                                        @foreach (\App\Models\TempatWisata::ROAD_ACCESSIBILITY as $key => $value)
+                                            <label
+                                                class="flex items-center gap-2 px-3 py-2 hover:bg-emerald-50 cursor-pointer transition">
+                                                <input type="checkbox" name="beach_conditions[]"
+                                                    value="road_accessibility:{{ $key }}"
+                                                    {{ in_array('road_accessibility:' . $key, request('beach_conditions', [])) ? 'checked' : '' }}
+                                                    class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                                                    onchange="updateKondisiLabel()">
+                                                <span class="text-sm text-gray-700">{{ $value }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Kondisi Ombak -->
+                                    <div class="border-b border-gray-100">
+                                        <div class="px-3 py-2 bg-gray-50 sticky top-0">
+                                            <p class="text-xs font-bold text-gray-700 uppercase tracking-wide">Kondisi
+                                                Ombak</p>
+                                        </div>
+                                        @foreach (\App\Models\TempatWisata::WAVE_CONDITIONS as $key => $value)
+                                            <label
+                                                class="flex items-center gap-2 px-3 py-2 hover:bg-emerald-50 cursor-pointer transition">
+                                                <input type="checkbox" name="beach_conditions[]"
+                                                    value="wave_condition:{{ $key }}"
+                                                    {{ in_array('wave_condition:' . $key, request('beach_conditions', [])) ? 'checked' : '' }}
+                                                    class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                                                    onchange="updateKondisiLabel()">
+                                                <span class="text-sm text-gray-700">{{ $value }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Karakteristik Pantai -->
+                                    <div class="border-b border-gray-100">
+                                        <div class="px-3 py-2 bg-gray-50 sticky top-0">
+                                            <p class="text-xs font-bold text-gray-700 uppercase tracking-wide">
+                                                Karakteristik Pantai</p>
+                                        </div>
+                                        @foreach (\App\Models\TempatWisata::BEACH_CHARACTERISTICS as $key => $value)
+                                            <label
+                                                class="flex items-center gap-2 px-3 py-2 hover:bg-emerald-50 cursor-pointer transition">
+                                                <input type="checkbox" name="beach_conditions[]"
+                                                    value="beach_characteristic:{{ $key }}"
+                                                    {{ in_array('beach_characteristic:' . $key, request('beach_conditions', [])) ? 'checked' : '' }}
+                                                    class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                                                    onchange="updateKondisiLabel()">
+                                                <span class="text-sm text-gray-700">{{ $value }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Kenyamanan Lingkungan -->
+                                    <div>
+                                        <div class="px-3 py-2 bg-gray-50 sticky top-0">
+                                            <p class="text-xs font-bold text-gray-700 uppercase tracking-wide">Kenyamanan
+                                                Lingkungan</p>
+                                        </div>
+                                        @foreach (\App\Models\TempatWisata::ENVIRONMENT_COMFORT as $key => $value)
+                                            <label
+                                                class="flex items-center gap-2 px-3 py-2 hover:bg-emerald-50 cursor-pointer transition">
+                                                <input type="checkbox" name="beach_conditions[]"
+                                                    value="environment_comfort:{{ $key }}"
+                                                    {{ in_array('environment_comfort:' . $key, request('beach_conditions', [])) ? 'checked' : '' }}
+                                                    class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                                                    onchange="updateKondisiLabel()">
+                                                <span class="text-sm text-gray-700">{{ $value }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
 
@@ -627,6 +757,17 @@
             }
         }
 
+        // Update Kondisi Pantai label
+        function updateKondisiLabel() {
+            const checkboxes = document.querySelectorAll('input[name="beach_conditions[]"]:checked');
+            const label = document.getElementById('kondisiLabel');
+            if (checkboxes.length > 0) {
+                label.textContent = `${checkboxes.length} Kondisi Dipilih`;
+            } else {
+                label.textContent = 'Kondisi Pantai';
+            }
+        }
+
         // Reset filter
         function resetFilter() {
             window.location.href = '{{ route('home') }}';
@@ -640,9 +781,10 @@
                 updateKecamatanLabel(selectedKecamatan);
             }
 
-            // Initialize Fasilitas and Layanan labels
+            // Initialize Fasilitas, Layanan, and Kondisi labels
             updateFasilitasLabel();
             updateLayananLabel();
+            updateKondisiLabel();
         });
     </script>
 @endpush

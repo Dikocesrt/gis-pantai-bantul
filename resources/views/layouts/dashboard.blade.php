@@ -149,7 +149,7 @@
 
             <div class="p-4 border-t border-emerald-500/30">
                 <div class="bg-white/10 backdrop-blur-sm rounded-lg p-3 sidebar-text">
-                    <p class="text-xs text-emerald-100 leading-relaxed">© 2025 GIS Pantai Bantul</p>
+                    <p class="text-xs text-emerald-100 leading-relaxed">© 2026 GIS Pantai Bantul</p>
                     <p class="text-xs text-emerald-200 font-medium">Daerah Istimewa Yogyakarta</p>
                 </div>
             </div>
