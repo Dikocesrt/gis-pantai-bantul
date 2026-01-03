@@ -18,7 +18,7 @@
     </section>
 
     <!-- Filter & Search Section -->
-    <section class="py-6 bg-white sticky top-20 z-40">
+    <section class="pt-3 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <form id="filterForm" method="GET" action="{{ route('wisata.list') }}">
                 <div class="grid grid-cols-1 md:grid-cols-7 gap-3">

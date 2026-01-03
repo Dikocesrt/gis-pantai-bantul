@@ -68,7 +68,7 @@
                             <div class="relative">
                                 <button type="button" onclick="toggleDropdown('kecamatanDropdown')"
                                     class="w-full px-3 py-2 bg-white/95 backdrop-blur-sm border border-white/20 rounded-lg text-left flex items-center justify-between hover:bg-white transition text-sm text-gray-700 font-medium">
-                                    <span id="kecamatanLabel">Semua Kecamatan</span>
+                                    <span id="kecamatanLabel">Kecamatan</span>
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -83,7 +83,7 @@
                                             {{ request('kecamatan') == '' ? 'checked' : '' }}
                                             class="w-4 h-4 text-emerald-600 border-gray-300 focus:ring-emerald-500"
                                             onchange="updateKecamatanLabel(this)">
-                                        <span class="text-sm text-gray-700">Semua Kecamatan</span>
+                                        <span class="text-sm text-gray-700">Semua</span>
                                     </label>
                                     @foreach ($kecamatans as $kecamatan)
                                         <label
@@ -170,7 +170,7 @@
                                     </svg>
                                 </button>
                                 <div id="kondisiDropdown"
-                                    class="hidden absolute z-[9999] w-80 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl max-h-96 overflow-y-auto">
+                                    class="hidden absolute z-[9999] w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-xl max-h-96 overflow-y-auto">
 
                                     <!-- Tingkat Keamanan -->
                                     <div class="border-b border-gray-100">
@@ -487,6 +487,27 @@
 
         .leaflet-map-pane {
             z-index: 1 !important;
+        }
+
+        /* Fix z-index hierarchy for leaflet layers */
+        .leaflet-overlay-pane {
+            z-index: 400 !important;
+        }
+
+        .leaflet-shadow-pane {
+            z-index: 500 !important;
+        }
+
+        .leaflet-marker-pane {
+            z-index: 600 !important;
+        }
+
+        .leaflet-tooltip-pane {
+            z-index: 650 !important;
+        }
+
+        .leaflet-popup-pane {
+            z-index: 700 !important;
         }
 
         /* Fix marker container */
