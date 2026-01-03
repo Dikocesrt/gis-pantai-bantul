@@ -3,10 +3,15 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminVerificationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
+// Public routes (Website Pengunjung)
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/wisata', [HomeController::class, 'list'])->name('wisata.list');
+Route::get('/wisata/{slug}', [HomeController::class, 'show'])->name('home.show');
+
 // Auth routes
-Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -14,18 +19,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register-admin', [AuthController::class, 'showRegisterForm'])->name('auth.register-form');
 Route::post('/register-admin', [AuthController::class, 'registerAdmin'])->name('auth.register');
 Route::get('/register-success', [AuthController::class, 'registerSuccess'])->name('auth.register-success');
-
-// Admin verification routes (untuk super admin dan admin)
-Route::middleware(['role:admin,super_admin'])->group(function () {
-    Route::get('/admin/verification', [AdminVerificationController::class, 'index'])->name('admin.verification.index');
-    Route::post('/admin/{userId}/verify', [AdminVerificationController::class, 'verify'])->name('admin.verify');
-    Route::post('/admin/{userId}/reject', [AdminVerificationController::class, 'reject'])->name('admin.reject');
-});
-
-// Admin delete route (hanya untuk super admin)
-Route::middleware(['role:super_admin'])->group(function () {
-    Route::delete('/admin/{userId}/delete', [AdminVerificationController::class, 'delete'])->name('admin.delete');
-});
 
 // Dashboard routes (untuk admin yang sudah verified)
 Route::middleware(['role:admin,super_admin'])->group(function () {
@@ -62,4 +55,14 @@ Route::middleware(['role:admin,super_admin'])->group(function () {
     Route::get('/tempat-wisata/{id}/edit', [App\Http\Controllers\TempatWisataController::class, 'edit'])->name('tempat-wisata.edit');
     Route::put('/tempat-wisata/{id}', [App\Http\Controllers\TempatWisataController::class, 'update'])->name('tempat-wisata.update');
     Route::delete('/tempat-wisata/{id}', [App\Http\Controllers\TempatWisataController::class, 'destroy'])->name('tempat-wisata.destroy');
+
+    // Admin Management routes
+    Route::get('/admin/verification', [AdminVerificationController::class, 'index'])->name('admin.verification.index');
+    Route::post('/admin/{userId}/verify', [AdminVerificationController::class, 'verify'])->name('admin.verify');
+    Route::post('/admin/{userId}/reject', [AdminVerificationController::class, 'reject'])->name('admin.reject');
+});
+
+// Admin delete route (hanya untuk super admin)
+Route::middleware(['role:super_admin'])->group(function () {
+    Route::delete('/admin/{userId}/delete', [AdminVerificationController::class, 'delete'])->name('admin.delete');
 });

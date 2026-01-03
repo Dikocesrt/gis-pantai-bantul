@@ -17,8 +17,17 @@ class Kecamatan extends Model
     protected $fillable = [
         'id',
         'name',
+        'boundary_geojson',
+        'color',
+        'center_lat',
+        'center_lng',
         'created_by',
         'updated_by',
+    ];
+
+    protected $casts = [
+        'center_lat' => 'decimal:7',
+        'center_lng' => 'decimal:7',
     ];
 
     public function tempatWisata()
