@@ -323,6 +323,51 @@
                             </div>
                         </div>
                     @endif
+
+                    <!-- Parking Fees -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2">
+                                </path>
+                            </svg>
+                            Tarif Parkir
+                        </h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span class="font-medium text-gray-900">Motor</span>
+                                <span class="font-bold">
+                                    Rp {{ number_format(env('PARKING_FEE_MOTOR', 5000), 0, ',', '.') }}
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span class="font-medium text-gray-900">Mobil</span>
+                                <span class="font-bold">
+                                    Rp {{ number_format(env('PARKING_FEE_MOBIL', 10000), 0, ',', '.') }}
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span class="font-medium text-gray-900">Kereta Mini</span>
+                                <span class="font-bold">
+                                    Rp {{ number_format(env('PARKING_FEE_KERETA_MINI', 10000), 0, ',', '.') }}
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span class="font-medium text-gray-900">Mini Bus</span>
+                                <span class="font-bold">
+                                    Rp {{ number_format(env('PARKING_FEE_MINI_BUS', 10000), 0, ',', '.') }}
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span class="font-medium text-gray-900">Bus Besar</span>
+                                <span class="font-bold">
+                                    Rp {{ number_format(env('PARKING_FEE_BUS_BESAR', 20000), 0, ',', '.') }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Right Column -->
