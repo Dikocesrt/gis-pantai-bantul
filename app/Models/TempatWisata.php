@@ -29,7 +29,7 @@ class TempatWisata extends Model
         'cleanliness_level',
         'road_accessibility',
         'wave_condition',
-        'beach_characteristic',
+        'shade_comfort',
         'environment_comfort',
         'is_active',
         'created_by',
@@ -67,10 +67,11 @@ class TempatWisata extends Model
         'besar' => 'Besar',
     ];
 
-    const BEACH_CHARACTERISTICS = [
-        'berpasir' => 'Berpasir',
-        'berkarang' => 'Berkarang',
-        'berpasir_dan_berkarang' => 'Berpasir dan Berkarang',
+    const SHADE_COMFORT = [
+        'banyak_teduh' => 'Banyak Pohon Teduh',
+        'cukup_teduh' => 'Cukup Teduh',
+        'minim_teduh' => 'Minim Teduh',
+        'tidak_ada_teduh' => 'Tidak Ada Teduh',
     ];
 
     const ENVIRONMENT_COMFORT = [

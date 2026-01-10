@@ -83,7 +83,7 @@
                             $tempatWisata->cleanliness_level ||
                             $tempatWisata->road_accessibility ||
                             $tempatWisata->wave_condition ||
-                            $tempatWisata->beach_characteristic ||
+                            $tempatWisata->shade_comfort ||
                             $tempatWisata->environment_comfort)
                         <div class="bg-white rounded-xl shadow-lg p-6">
                             <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -175,21 +175,21 @@
                                     </div>
                                 @endif
 
-                                @if ($tempatWisata->beach_characteristic)
+                                @if ($tempatWisata->shade_comfort)
                                     <div
                                         class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-emerald-50 transition">
                                         <div class="bg-emerald-100 p-2 rounded-lg shrink-0">
                                             <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9">
+                                                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
                                                 </path>
                                             </svg>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-medium text-gray-600 mb-1">Karakteristik Pantai</p>
+                                            <p class="text-xs font-medium text-gray-600 mb-1">Tingkat Keteduhan</p>
                                             <p class="text-sm font-bold text-gray-900">
-                                                {{ \App\Models\TempatWisata::BEACH_CHARACTERISTICS[$tempatWisata->beach_characteristic] ?? $tempatWisata->beach_characteristic }}
+                                                {{ \App\Models\TempatWisata::SHADE_COMFORT[$tempatWisata->shade_comfort] ?? $tempatWisata->shade_comfort }}
                                             </p>
                                         </div>
                                     </div>

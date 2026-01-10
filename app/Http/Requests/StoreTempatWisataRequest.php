@@ -35,7 +35,7 @@ class StoreTempatWisataRequest extends FormRequest
             'cleanliness_level' => 'nullable|string|in:bersih,cukup_bersih,kurang_bersih',
             'road_accessibility' => 'nullable|string|in:mudah_diakses,cukup_mudah,sulit_diakses',
             'wave_condition' => 'nullable|string|in:tenang,sedang,besar',
-            'beach_characteristic' => 'nullable|string|in:berpasir,berkarang,berpasir_dan_berkarang',
+            'shade_comfort' => 'nullable|string|in:banyak_teduh,cukup_teduh,minim_teduh,tidak_ada_teduh',
             'environment_comfort' => 'nullable|string|in:nyaman,cukup_nyaman,kurang_nyaman',
             
             // Fasilitas (array of IDs)
@@ -87,7 +87,7 @@ class StoreTempatWisataRequest extends FormRequest
             'cleanliness_level.in' => 'Tingkat kebersihan tidak valid',
             'road_accessibility.in' => 'Aksesibilitas jalan tidak valid',
             'wave_condition.in' => 'Kondisi ombak tidak valid',
-            'beach_characteristic.in' => 'Karakteristik pantai tidak valid',
+            'shade_comfort.in' => 'Kenyamanan teduh tidak valid',
             'environment_comfort.in' => 'Kenyamanan lingkungan tidak valid',
         ];
     }

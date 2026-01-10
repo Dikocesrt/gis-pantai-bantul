@@ -445,22 +445,22 @@
                             @enderror
                         </div>
 
-                        <!-- Beach Characteristic -->
+                        <!-- Shade Comfort -->
                         <div>
-                            <label for="beach_characteristic" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Karakteristik Pantai
+                            <label for="shade_comfort" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Tingkat Keteduhan
                             </label>
-                            <select id="beach_characteristic" name="beach_characteristic"
+                            <select id="shade_comfort" name="shade_comfort"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
-                                <option value="">Pilih Karakteristik Pantai</option>
-                                @foreach (\App\Models\TempatWisata::BEACH_CHARACTERISTICS as $key => $value)
+                                <option value="">Pilih Tingkat Keteduhan</option>
+                                @foreach (\App\Models\TempatWisata::SHADE_COMFORT as $key => $value)
                                     <option value="{{ $key }}"
-                                        {{ old('beach_characteristic', $tempatWisata->beach_characteristic) == $key ? 'selected' : '' }}>
+                                        {{ old('shade_comfort', $tempatWisata->shade_comfort) == $key ? 'selected' : '' }}>
                                         {{ $value }}
                                     </option>
                                 @endforeach
                             </select>
-                            @error('beach_characteristic')
+                            @error('shade_comfort')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>

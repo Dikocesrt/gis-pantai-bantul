@@ -215,18 +215,18 @@
                                 @endforeach
                             </div>
 
-                            <!-- Karakteristik Pantai -->
+                            <!-- Tingkat Keteduhan -->
                             <div class="border-b border-gray-100">
                                 <div class="px-3 py-2 bg-gray-50 sticky top-0">
-                                    <p class="text-xs font-bold text-gray-700 uppercase tracking-wide">Karakteristik Pantai
+                                    <p class="text-xs font-bold text-gray-700 uppercase tracking-wide">Tingkat Keteduhan
                                     </p>
                                 </div>
-                                @foreach (\App\Models\TempatWisata::BEACH_CHARACTERISTICS as $key => $value)
+                                @foreach (\App\Models\TempatWisata::SHADE_COMFORT as $key => $value)
                                     <label
                                         class="flex items-center gap-2 px-3 py-2 hover:bg-emerald-50 cursor-pointer transition">
                                         <input type="checkbox" name="beach_conditions[]"
-                                            value="beach_characteristic:{{ $key }}"
-                                            {{ in_array('beach_characteristic:' . $key, request('beach_conditions', [])) ? 'checked' : '' }}
+                                            value="shade_comfort:{{ $key }}"
+                                            {{ in_array('shade_comfort:' . $key, request('beach_conditions', [])) ? 'checked' : '' }}
                                             class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
                                             onchange="updateKondisiLabel()">
                                         <span class="text-sm text-gray-700">{{ $value }}</span>
