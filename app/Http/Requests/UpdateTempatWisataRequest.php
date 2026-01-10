@@ -47,6 +47,10 @@ class UpdateTempatWisataRequest extends FormRequest
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
             'phone' => 'nullable|string|max:20',
+            'website' => 'nullable|url|max:255',
+            'facebook' => 'nullable|string|max:255',
+            'instagram' => 'nullable|string|max:255',
+            'tiktok' => 'nullable|string|max:255',
             'is_active' => 'nullable|boolean',
             
             // Beach Information Fields
@@ -106,6 +110,7 @@ class UpdateTempatWisataRequest extends FormRequest
             'tipe_tempat_id.exists' => 'Tipe tempat tidak valid',
             'latitude.between' => 'Latitude harus antara -90 dan 90',
             'longitude.between' => 'Longitude harus antara -180 dan 180',
+            'website.url' => 'Format website tidak valid',
             'images.*.mimes' => 'Format gambar harus jpeg, jpg, png, gif, atau webp',
             'images.*.max' => 'Ukuran gambar maksimal 10 MB',
             'images.max' => 'Maksimal 5 gambar',

@@ -353,6 +353,65 @@
 
                     <!-- Divider -->
                     <div class="border-t border-gray-200 my-4"></div>
+                    <h4 class="text-lg font-bold text-gray-900 mb-4">Sosial Media & Website</h4>
+
+                    <!-- Grid 2 Columns for Social Media -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Website -->
+                        <div>
+                            <label for="website" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Website
+                            </label>
+                            <input type="url" id="website" name="website" value="{{ old('website') }}"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition"
+                                placeholder="https://example.com">
+                            @error('website')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Facebook -->
+                        <div>
+                            <label for="facebook" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Facebook
+                            </label>
+                            <input type="text" id="facebook" name="facebook" value="{{ old('facebook') }}"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition"
+                                placeholder="https://facebook.com/username atau @username">
+                            @error('facebook')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Instagram -->
+                        <div>
+                            <label for="instagram" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Instagram
+                            </label>
+                            <input type="text" id="instagram" name="instagram" value="{{ old('instagram') }}"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition"
+                                placeholder="https://instagram.com/username atau @username">
+                            @error('instagram')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- TikTok -->
+                        <div>
+                            <label for="tiktok" class="block text-sm font-semibold text-gray-700 mb-2">
+                                TikTok
+                            </label>
+                            <input type="text" id="tiktok" name="tiktok" value="{{ old('tiktok') }}"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition"
+                                placeholder="https://tiktok.com/@username atau @username">
+                            @error('tiktok')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="border-t border-gray-200 my-4"></div>
                     <h4 class="text-lg font-bold text-gray-900 mb-4">Informasi Kondisi Pantai</h4>
 
                     <!-- Grid 2 Columns for Beach Info -->
@@ -678,7 +737,8 @@
                                 </div>
                                 <div>
                                     <input type="text" name="opening_hours[{{ $index }}][note]"
-                                        value="{{ old("opening_hours.{$index}.note") }}" placeholder="Catatan (opsional)"
+                                        value="{{ old("opening_hours.{$index}.note") }}"
+                                        placeholder="Catatan (opsional)"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition text-sm">
                                 </div>
                             </div>
