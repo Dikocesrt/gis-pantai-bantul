@@ -11,6 +11,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/wisata', [HomeController::class, 'list'])->name('wisata.list');
 Route::get('/wisata/{slug}', [HomeController::class, 'show'])->name('home.show');
 Route::get('/tentang', [HomeController::class, 'about'])->name('about');
+Route::get('/informasi', [HomeController::class, 'informasi'])->name('informasi');
 
 // Auth routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -48,6 +49,14 @@ Route::middleware(['role:admin,super_admin'])->group(function () {
     Route::post('/layanans', [App\Http\Controllers\LayananController::class, 'store'])->name('layanans.store');
     Route::put('/layanans/{id}', [App\Http\Controllers\LayananController::class, 'update'])->name('layanans.update');
     Route::delete('/layanans/{id}', [App\Http\Controllers\LayananController::class, 'destroy'])->name('layanans.destroy');
+
+    // Informasi routes (Admin)
+    Route::get('/admin/informasi', [App\Http\Controllers\InformasiController::class, 'index'])->name('informasi.index');
+    Route::get('/admin/informasi/create', [App\Http\Controllers\InformasiController::class, 'create'])->name('informasi.create');
+    Route::post('/admin/informasi', [App\Http\Controllers\InformasiController::class, 'store'])->name('informasi.store');
+    Route::get('/admin/informasi/{id}/edit', [App\Http\Controllers\InformasiController::class, 'edit'])->name('informasi.edit');
+    Route::put('/admin/informasi/{id}', [App\Http\Controllers\InformasiController::class, 'update'])->name('informasi.update');
+    Route::delete('/admin/informasi/{id}', [App\Http\Controllers\InformasiController::class, 'destroy'])->name('informasi.destroy');
 
     // Tempat Wisata routes
     Route::get('/tempat-wisata', [App\Http\Controllers\TempatWisataController::class, 'index'])->name('tempat-wisata.index');

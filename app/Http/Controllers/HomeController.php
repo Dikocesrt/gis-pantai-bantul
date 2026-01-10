@@ -6,6 +6,7 @@ use App\Models\TempatWisata;
 use App\Models\Kecamatan;
 use App\Models\Fasilitas;
 use App\Models\Layanan;
+use App\Models\Informasi;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -239,5 +240,22 @@ class HomeController extends Controller
     public function about()
     {
         return view('home.about');
+    }
+
+    public function informasi()
+    {
+        $informasis = Informasi::with(['tempatWisata'])
+            ->orderBy('published_at', 'desc')
+            ->get();
+
+        $cloudName = config('filesystems.disks.cloudinary.cloud');
+        
+        $informasis->each(function ($item) use ($cloudName) {
+            if ($item->image_path) {
+                $item->image_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->image_path}";
+            }
+        });
+
+        return view('home.informasi', compact('informasis'));
     }
 }

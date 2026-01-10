@@ -101,8 +101,8 @@
                             Tempat Wisata
                         </div>
                     </a>
-                    <a href="#"
-                        class="px-4 py-2 text-white font-medium rounded-lg hover:bg-white/20 transition-all duration-200">
+                    <a href="{{ route('informasi') }}"
+                        class="px-4 py-2 text-white font-medium rounded-lg hover:bg-white/20 transition-all duration-200 {{ request()->routeIs('informasi') ? 'bg-white/20' : '' }}">
                         <div class="flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -177,8 +177,8 @@
                     </svg>
                     Tempat Wisata
                 </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 text-white font-medium rounded-lg hover:bg-white/20 transition-all duration-200">
+                <a href="{{ route('informasi') }}"
+                    class="flex items-center gap-3 px-4 py-3 text-white font-medium rounded-lg hover:bg-white/20 transition-all duration-200 {{ request()->routeIs('informasi') ? 'bg-white/20' : '' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
@@ -291,7 +291,8 @@
                                 </svg>
                                 Tempat Wisata
                             </a></li>
-                        <li><a href="#" class="hover:text-white transition flex items-center gap-2">
+                        <li><a href="{{ route('informasi') }}"
+                                class="hover:text-white transition flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 5l7 7-7 7"></path>
