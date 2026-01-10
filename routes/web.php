@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/wisata', [HomeController::class, 'list'])->name('wisata.list');
 Route::get('/wisata/{slug}', [HomeController::class, 'show'])->name('home.show');
+Route::get('/tentang', [HomeController::class, 'about'])->name('about');
 
 // Auth routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
