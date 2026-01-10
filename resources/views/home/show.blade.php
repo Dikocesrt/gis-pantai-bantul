@@ -324,6 +324,47 @@
                         </div>
                     @endif
 
+                    <!-- Entrance Fee -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z">
+                                </path>
+                            </svg>
+                            Harga Tiket Masuk
+                        </h3>
+                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-medium text-gray-900">Tiket Masuk</span>
+                                    <div class="relative group">
+                                        <svg class="w-4 h-4 text-gray-500 cursor-help" fill="currentColor"
+                                            viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                        <div
+                                            class="absolute left-0 bottom-full mb-2 hidden group-hover:block w-64 p-3 bg-gray-900 text-white text-sm rounded-lg shadow-xl z-10">
+                                            <div class="relative">
+                                                Tiket masuk ini berlaku untuk 1x kunjungan dan dapat digunakan untuk
+                                                mengunjungi semua pantai di Bantul
+                                                <div
+                                                    class="absolute left-4 top-full w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-gray-900">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="text-lg font-bold text-gray-900">
+                                    Rp {{ number_format(env('ENTRANCE_FEE', 15000), 0, ',', '.') }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Parking Fees -->
                     <div class="bg-white rounded-xl shadow-lg p-6">
                         <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
