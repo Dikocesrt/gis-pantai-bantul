@@ -60,9 +60,9 @@ class TempatWisata extends Model
     ];
 
     const ROAD_ACCESSIBILITY = [
-        'mudah_diakses' => 'Mudah Diakses',
-        'cukup_mudah' => 'Cukup Mudah',
-        'sulit_diakses' => 'Sulit Diakses',
+        'mudah_diakses' => 'Mudah Diakses (Bus Besar)',
+        'cukup_mudah' => 'Cukup Mudah (Mobil & Mini Bus)',
+        'sulit_diakses' => 'Sulit Diakses (Motor & Jalan Kaki)',
     ];
 
     const WAVE_CONDITIONS = [
