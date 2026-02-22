@@ -96,7 +96,7 @@
             class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-emerald-500 hover:shadow-xl transition-all duration-200">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-gray-600 text-sm font-medium mb-2">Total Admin</p>
+                    <p class="text-gray-600 text-sm font-medium mb-2">Admin Terdaftar</p>
                     <h3 class="text-4xl font-bold text-gray-900">{{ $allAdmins->count() }}</h3>
                 </div>
                 <div class="bg-emerald-50 p-3 rounded-lg">
