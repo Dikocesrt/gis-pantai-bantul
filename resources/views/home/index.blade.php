@@ -580,11 +580,29 @@
         const kecamatansWithBoundary = @json($kecamatansWithBoundary);
         const boundaryLayers = {};
 
+        // Calculate heatmap colors based on wisata count
+        const maxWisata = Math.max(...kecamatansWithBoundary.map(k => k.wisata_count), 1);
+
+        function getHeatmapColor(count, max) {
+            // HSL: hue=155 (emerald), saturation=70%
+            // Lightness: 25% (dark, few) → 65% (bright, many)
+            const ratio = count / max;
+            const lightness = 25 + (ratio * 40);
+            return `hsl(155, 70%, ${lightness}%)`;
+        }
+
+        function getHeatmapOpacity(count, max) {
+            // Fill opacity: 0.15 (few) → 0.40 (many)
+            const ratio = count / max;
+            return 0.15 + (ratio * 0.25);
+        }
+
         kecamatansWithBoundary.forEach(kecamatan => {
             if (kecamatan.boundary_geojson) {
                 try {
                     const geojson = JSON.parse(kecamatan.boundary_geojson);
-                    const color = kecamatan.color || '#10b981';
+                    const color = getHeatmapColor(kecamatan.wisata_count, maxWisata);
+                    const baseFillOpacity = getHeatmapOpacity(kecamatan.wisata_count, maxWisata);
 
                     const layer = L.geoJSON(geojson, {
                         style: {
@@ -592,30 +610,70 @@
                             weight: 2,
                             opacity: 0.8,
                             fillColor: color,
-                            fillOpacity: 0.1
+                            fillOpacity: baseFillOpacity
                         },
                         onEachFeature: function(feature, layer) {
-                            // Add popup with kecamatan name
+                            // Build wisata list
+                            let wisataListHtml = '';
+                            if (kecamatan.wisata_names && kecamatan.wisata_names.length > 0) {
+                                wisataListHtml = kecamatan.wisata_names.map(name =>
+                                    `<div style="display:flex;align-items:center;gap:6px;padding:4px 0;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" style="flex-shrink:0;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                        <span style="font-size:12px;color:#374151;">${name}</span>
+                                    </div>`
+                                ).join('');
+
+                                if (kecamatan.wisata_count > 5) {
+                                    wisataListHtml +=
+                                        `<p style="font-size:11px;color:#9ca3af;padding-left:20px;margin-top:2px;">dan ${kecamatan.wisata_count - 5} lainnya...</p>`;
+                                }
+                            }
+
                             layer.bindPopup(`
-                                <div class="text-center p-2">
-                                    <p class="font-bold text-gray-900">${kecamatan.name}</p>
+                                <div style="min-width:200px;max-width:260px;font-family:system-ui,-apple-system,sans-serif;padding:8px;">
+                                    <div style="display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid #e5e7eb;">
+                                        <div style="background:${color}20;padding:8px;border-radius:10px;">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p style="font-size:14px;font-weight:700;color:#111827;margin:0;">Kec. ${kecamatan.name}</p>
+                                            <p style="font-size:11px;color:#6b7280;margin:2px 0 0 0;">${kecamatan.wisata_count} tempat wisata</p>
+                                        </div>
+                                    </div>
+                                    ${kecamatan.wisata_count > 0 ? `
+                                            <div style="margin-top:8px;">
+                                                <p style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 4px 0;">Destinasi Wisata</p>
+                                                ${wisataListHtml}
+                                            </div>
+                                        ` : `
+                                            <div style="text-align:center;padding:12px 0 4px;">
+                                                <p style="font-size:12px;color:#9ca3af;margin:0;">Belum ada data wisata</p>
+                                            </div>
+                                        `}
                                 </div>
                             `, {
-                                className: 'kecamatan-popup'
+                                className: 'kecamatan-popup',
+                                maxWidth: 280
                             });
 
                             // Hover effect
                             layer.on('mouseover', function(e) {
                                 this.setStyle({
                                     weight: 3,
-                                    fillOpacity: 0.2
+                                    fillOpacity: Math.min(baseFillOpacity + 0.15, 0.6)
                                 });
                             });
 
                             layer.on('mouseout', function(e) {
                                 this.setStyle({
                                     weight: 2,
-                                    fillOpacity: 0.1
+                                    fillOpacity: baseFillOpacity
                                 });
                             });
 
@@ -642,6 +700,32 @@
                 }
             }
         });
+
+        // Heatmap Legend
+        const legend = L.control({
+            position: 'bottomright'
+        });
+        legend.onAdd = function(map) {
+            const div = L.DomUtil.create('div', '');
+            div.style.cssText =
+                'background:white;padding:12px 16px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.15);font-family:system-ui,-apple-system,sans-serif;';
+            div.innerHTML = `
+                <p style="font-size:12px;font-weight:700;color:#111827;margin:0 0 8px 0;">Kepadatan Wisata</p>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:10px;color:#6b7280;">Sedikit</span>
+                    <div style="display:flex;height:12px;border-radius:6px;overflow:hidden;flex:1;min-width:100px;">
+                        <div style="flex:1;background:hsl(155,70%,25%);"></div>
+                        <div style="flex:1;background:hsl(155,70%,35%);"></div>
+                        <div style="flex:1;background:hsl(155,70%,45%);"></div>
+                        <div style="flex:1;background:hsl(155,70%,55%);"></div>
+                        <div style="flex:1;background:hsl(155,70%,65%);"></div>
+                    </div>
+                    <span style="font-size:10px;color:#6b7280;">Banyak</span>
+                </div>
+            `;
+            return div;
+        };
+        legend.addTo(map);
 
         // Custom icon with gradient
         const customIcon = L.divIcon({

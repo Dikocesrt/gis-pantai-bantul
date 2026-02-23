@@ -138,6 +138,24 @@ class KecamatanController extends Controller
         }
     }
 
+    public function toggleVisibility($id)
+    {
+        try {
+            $kecamatan = Kecamatan::findOrFail($id);
+            $kecamatan->update([
+                'is_visible' => !$kecamatan->is_visible,
+                'updated_by' => Auth::id(),
+            ]);
+
+            $status = $kecamatan->is_visible ? 'ditampilkan' : 'disembunyikan';
+            return redirect()->route('kecamatan.index')
+                ->with('success', "Poligon kecamatan {$kecamatan->name} berhasil {$status} di peta");
+        } catch (\Exception $e) {
+            return redirect()->route('kecamatan.index')
+                ->with('error', 'Gagal mengubah visibilitas kecamatan.');
+        }
+    }
+
     /**
      * Calculate center point from GeoJSON
      */

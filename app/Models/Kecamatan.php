@@ -21,6 +21,7 @@ class Kecamatan extends Model
         'color',
         'center_lat',
         'center_lng',
+        'is_visible',
         'created_by',
         'updated_by',
     ];
@@ -28,6 +29,7 @@ class Kecamatan extends Model
     protected $casts = [
         'center_lat' => 'decimal:7',
         'center_lng' => 'decimal:7',
+        'is_visible' => 'boolean',
     ];
 
     public function tempatWisata()

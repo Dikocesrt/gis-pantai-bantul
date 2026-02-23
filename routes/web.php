@@ -38,6 +38,7 @@ Route::middleware(['role:admin,super_admin'])->group(function () {
     Route::post('/kecamatan', [KecamatanController::class, 'store'])->name('kecamatan.store');
     Route::put('/kecamatan/{kecamatan}', [KecamatanController::class, 'update'])->name('kecamatan.update');
     Route::delete('/kecamatan/{kecamatan}', [KecamatanController::class, 'destroy'])->name('kecamatan.destroy');
+    Route::patch('/kecamatan/{kecamatan}/toggle-visibility', [KecamatanController::class, 'toggleVisibility'])->name('kecamatan.toggleVisibility');
 
     // Fasilitas routes
     Route::get('/fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');

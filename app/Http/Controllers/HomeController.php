@@ -102,10 +102,16 @@ class HomeController extends Controller
         $layanans = Layanan::orderBy('name')->get();
 
         // Prepare kecamatan data with boundaries for map
-        $kecamatansWithBoundary = Kecamatan::whereNotNull('boundary_geojson')
+        $kecamatansWithBoundary = Kecamatan::with(['tempatWisata' => function($query) {
+                $query->where('is_active', true);
+            }])
+            ->whereNotNull('boundary_geojson')
+            ->where('is_visible', true)
             ->orderBy('name')
             ->get()
             ->map(function($kecamatan) {
+                $wisataAktif = $kecamatan->tempatWisata;
+
                 return [
                     'id' => $kecamatan->id,
                     'name' => $kecamatan->name,
@@ -113,6 +119,8 @@ class HomeController extends Controller
                     'color' => $kecamatan->color ?? '#10b981',
                     'center_lat' => $kecamatan->center_lat,
                     'center_lng' => $kecamatan->center_lng,
+                    'wisata_count' => $wisataAktif->count(),
+                    'wisata_names' => $wisataAktif->take(5)->pluck('name')->toArray(),
                 ];
             });
 
