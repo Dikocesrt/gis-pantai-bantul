@@ -115,6 +115,11 @@ class TempatWisata extends Model
         return $this->hasMany(OpeningHours::class);
     }
 
+    public function ulasans()
+    {
+        return $this->hasMany(Ulasan::class);
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');

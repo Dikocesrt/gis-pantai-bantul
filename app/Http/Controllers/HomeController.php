@@ -7,7 +7,10 @@ use App\Models\Kecamatan;
 use App\Models\Fasilitas;
 use App\Models\Layanan;
 use App\Models\Informasi;
+use App\Models\Ulasan;
+use App\Http\Requests\StoreUlasanRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
@@ -214,6 +217,9 @@ class HomeController extends Controller
             'images',
             'openingHours' => function($query) {
                 $query->orderBy('day_of_week');
+            },
+            'ulasans' => function($query) {
+                $query->orderBy('created_at', 'desc');
             }
         ])
         ->where('slug', $slug)
@@ -234,7 +240,35 @@ class HomeController extends Controller
             $item->icon_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->icon}";
         });
 
-        return view('home.show', compact('tempatWisata'));
+        $ratingAverage = $tempatWisata->ulasans->avg('rating');
+        $ratingCount = $tempatWisata->ulasans->count();
+
+        return view('home.show', compact('tempatWisata', 'ratingAverage', 'ratingCount'));
+    }
+
+    public function storeUlasan(StoreUlasanRequest $request)
+    {
+        try {
+            $tempatWisata = TempatWisata::where('id', $request->tempat_wisata_id)
+                ->where('is_active', true)
+                ->firstOrFail();
+
+            Ulasan::create([
+                'id' => (string) Str::uuid(),
+                'tempat_wisata_id' => $tempatWisata->id,
+                'name' => $request->name ?: 'Tanpa Nama',
+                'rating' => $request->rating,
+                'comment' => $request->comment,
+            ]);
+
+            return redirect()->back()->with('success', 'Ulasan berhasil dikirim. Terima kasih!');
+
+        } catch (\Exception $e) {
+            \Log::error('Gagal mengirim ulasan: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal mengirim ulasan. Silakan coba lagi.');
+        }
     }
 
     public function about()

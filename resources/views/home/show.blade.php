@@ -3,6 +3,104 @@
 @section('title', $tempatWisata->name . ' - GIS Pantai Bantul')
 
 @section('content')
+    <script>
+        function showToast(toastId) {
+            setTimeout(() => {
+                const toast = document.getElementById(toastId);
+                if (toast) {
+                    toast.classList.remove('translate-x-[400px]');
+                    toast.classList.add('translate-x-0');
+                }
+            }, 100);
+
+            setTimeout(() => {
+                closeToast(toastId);
+            }, 5000);
+        }
+
+        function closeToast(toastId) {
+            const toast = document.getElementById(toastId);
+            if (toast) {
+                toast.classList.remove('translate-x-0');
+                toast.classList.add('translate-x-[400px]');
+                setTimeout(() => {
+                    toast.remove();
+                }, 500);
+            }
+        }
+    </script>
+
+    @if (session('success'))
+        <div id="successToast"
+            class="fixed top-6 right-6 z-[200] transform translate-x-[400px] transition-transform duration-500 ease-out">
+            <div class="bg-white rounded-xl shadow-2xl border-l-4 border-emerald-500 p-4 min-w-[320px] max-w-md">
+                <div class="flex items-start gap-3">
+                    <div class="bg-emerald-100 p-2 rounded-lg shrink-0">
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-gray-900 mb-1">Berhasil!</h4>
+                        <p class="text-sm text-gray-600">{{ session('success') }}</p>
+                    </div>
+                    <button onclick="closeToast('successToast')"
+                        class="text-gray-400 hover:text-gray-600 transition shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            showToast('successToast');
+        </script>
+    @endif
+
+    @if (session('error') || $errors->any())
+        <div id="errorToast"
+            class="fixed top-6 right-6 z-[200] transform translate-x-[400px] transition-transform duration-500 ease-out">
+            <div class="bg-white rounded-xl shadow-2xl border-l-4 border-red-500 p-4 min-w-[320px] max-w-md">
+                <div class="flex items-start gap-3">
+                    <div class="bg-red-100 p-2 rounded-lg shrink-0">
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-gray-900 mb-1">Gagal!</h4>
+                        @if (session('error'))
+                            <p class="text-sm text-gray-600">{{ session('error') }}</p>
+                        @endif
+                        @if ($errors->any())
+                            <div class="text-sm text-gray-600 space-y-1">
+                                @foreach ($errors->all() as $error)
+                                    <p>{{ $error }}</p>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                    <button onclick="closeToast('errorToast')"
+                        class="text-gray-400 hover:text-gray-600 transition shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            showToast('errorToast');
+        </script>
+    @endif
+
     <!-- Main Content -->
     <section class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -439,6 +537,179 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Rating & Ulasan Section -->
+                    <div id="ulasan" class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z">
+                                </path>
+                            </svg>
+                            Rating & Ulasan
+                        </h3>
+
+                        <!-- Rating Summary -->
+                        <div
+                            class="flex items-center gap-6 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg mb-6">
+                            <div class="text-center">
+                                <p class="text-4xl font-bold text-gray-900">
+                                    {{ $ratingCount > 0 ? number_format($ratingAverage, 1) : '-' }}
+                                </p>
+                                <div class="flex items-center gap-1 mt-1">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <svg class="w-4 h-4 {{ $ratingCount > 0 && $i <= round($ratingAverage) ? 'text-yellow-400' : 'text-gray-300' }}"
+                                            fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                            </path>
+                                        </svg>
+                                    @endfor
+                                </div>
+                                <p class="text-xs text-gray-600 mt-1">{{ $ratingCount }} ulasan</p>
+                            </div>
+
+                            @if ($ratingCount > 0)
+                                <div class="flex-1 space-y-1">
+                                    @for ($i = 5; $i >= 1; $i--)
+                                        @php
+                                            $count = $tempatWisata->ulasans->where('rating', $i)->count();
+                                            $percentage = $ratingCount > 0 ? ($count / $ratingCount) * 100 : 0;
+                                        @endphp
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs text-gray-600 w-3">{{ $i }}</span>
+                                            <svg class="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                                </path>
+                                            </svg>
+                                            <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                                <div class="h-full bg-yellow-400 rounded-full transition-all duration-300"
+                                                    style="width: {{ $percentage }}%"></div>
+                                            </div>
+                                            <span class="text-xs text-gray-500 w-6 text-right">{{ $count }}</span>
+                                        </div>
+                                    @endfor
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Form Ulasan -->
+                        <form action="{{ route('wisata.ulasan.store') }}" method="POST" class="mb-8">
+                            @csrf
+                            <input type="hidden" name="tempat_wisata_id" value="{{ $tempatWisata->id }}">
+
+                            <h4 class="text-lg font-bold text-gray-900 mb-4">Tulis Ulasan</h4>
+
+                            <!-- Nama -->
+                            <div class="mb-4">
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Nama <span class="text-gray-400 font-normal">(opsional)</span>
+                                </label>
+                                <input type="text" id="name" name="name" value="{{ old('name') }}"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition"
+                                    placeholder="Masukkan nama Anda atau kosongkan untuk anonim">
+                            </div>
+
+                            <!-- Rating Bintang -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Rating <span class="text-red-500">*</span>
+                                </label>
+                                <input type="hidden" name="rating" id="ratingInput" value="{{ old('rating', '') }}"
+                                    required>
+                                <div class="flex items-center gap-1" id="starRating">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <button type="button" onclick="setRating({{ $i }})"
+                                            class="star-btn p-1 transition-transform hover:scale-110 focus:outline-none"
+                                            data-rating="{{ $i }}">
+                                            <svg class="w-8 h-8 text-gray-300 transition-colors duration-150"
+                                                fill="currentColor" viewBox="0 0 20 20" id="star_{{ $i }}">
+                                                <path
+                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    @endfor
+                                    <span id="ratingText" class="ml-2 text-sm text-gray-500"></span>
+                                </div>
+                                @error('rating')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Komentar -->
+                            <div class="mb-4">
+                                <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Komentar <span class="text-gray-400 font-normal">(opsional)</span>
+                                </label>
+                                <textarea id="comment" name="comment" rows="3"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition resize-none"
+                                    placeholder="Ceritakan pengalaman Anda mengunjungi tempat ini...">{{ old('comment') }}</textarea>
+                            </div>
+
+                            <!-- Submit -->
+                            <button type="submit"
+                                class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                </svg>
+                                Kirim Ulasan
+                            </button>
+                        </form>
+
+                        <!-- Daftar Ulasan -->
+                        @if ($tempatWisata->ulasans->count() > 0)
+                            <div class="border-t border-gray-200 pt-6">
+                                <h4 class="text-lg font-bold text-gray-900 mb-4">
+                                    Semua Ulasan ({{ $tempatWisata->ulasans->count() }})
+                                </h4>
+                                <div class="space-y-4">
+                                    @foreach ($tempatWisata->ulasans as $ulasan)
+                                        <div class="p-4 bg-gray-50 rounded-lg hover:bg-emerald-50 transition">
+                                            <div class="flex items-start justify-between mb-2">
+                                                <div>
+                                                    <p class="text-sm font-semibold text-gray-900">
+                                                        {{ $ulasan->name }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500">
+                                                        {{ $ulasan->created_at->diffForHumans() }}
+                                                    </p>
+                                                </div>
+                                                <div class="flex items-center gap-0.5">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <svg class="w-4 h-4 {{ $i <= $ulasan->rating ? 'text-yellow-400' : 'text-gray-300' }}"
+                                                            fill="currentColor" viewBox="0 0 20 20">
+                                                            <path
+                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                                            </path>
+                                                        </svg>
+                                                    @endfor
+                                                </div>
+                                            </div>
+                                            @if ($ulasan->comment)
+                                                <p class="text-sm text-gray-700 leading-relaxed">
+                                                    {{ $ulasan->comment }}
+                                                </p>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @else
+                            <div class="border-t border-gray-200 pt-6 text-center">
+                                <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                    </path>
+                                </svg>
+                                <p class="text-sm text-gray-500">Belum ada ulasan. Jadilah yang pertama!</p>
+                            </div>
+                        @endif
+                    </div>
                 </div>
 
                 <!-- Right Column -->
@@ -610,5 +881,30 @@
         L.marker([{{ $tempatWisata->latitude }}, {{ $tempatWisata->longitude }}], {
             icon: customIcon
         }).addTo(detailMap);
+
+        // Star Rating Interactive
+        const ratingLabels = ['', 'Sangat Buruk', 'Buruk', 'Cukup', 'Baik', 'Sangat Baik'];
+
+        function setRating(rating) {
+            document.getElementById('ratingInput').value = rating;
+            document.getElementById('ratingText').textContent = ratingLabels[rating];
+
+            for (let i = 1; i <= 5; i++) {
+                const star = document.getElementById('star_' + i);
+                if (i <= rating) {
+                    star.classList.remove('text-gray-300');
+                    star.classList.add('text-yellow-400');
+                } else {
+                    star.classList.remove('text-yellow-400');
+                    star.classList.add('text-gray-300');
+                }
+            }
+        }
+
+        // Initialize rating from old input
+        const oldRating = document.getElementById('ratingInput').value;
+        if (oldRating) {
+            setRating(parseInt(oldRating));
+        }
     </script>
 @endpush

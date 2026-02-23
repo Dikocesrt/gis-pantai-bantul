@@ -25,6 +25,7 @@ class TempatWisataController extends Controller
             'kecamatan',
             'tipeTempat',
             'creator',
+            'ulasans',
             'images' => function($query) {
                 $query->where('is_primary', true);
             }
@@ -38,6 +39,8 @@ class TempatWisataController extends Controller
             if ($item->images->isNotEmpty()) {
                 $item->primary_image_url = "https://res.cloudinary.com/{$cloudName}/image/upload/{$item->images->first()->path}";
             }
+            $item->rating_average = $item->ulasans->avg('rating');
+            $item->rating_count = $item->ulasans->count();
         });
 
         return view('tempat-wisata.index', compact('tempatWisata'));
