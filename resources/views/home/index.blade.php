@@ -603,16 +603,17 @@
         // Render Kecamatan Boundaries (Polygons)
         const kecamatansWithBoundary = @json($kecamatansWithBoundary);
         const boundaryLayers = {};
+        let isHeatmapMode = true;
 
         // Calculate heatmap colors based on wisata count
         const maxWisata = Math.max(...kecamatansWithBoundary.map(k => k.wisata_count), 1);
 
         function getHeatmapColor(count, max) {
-            // HSL: hue=155 (emerald), saturation=70%
-            // Lightness: 25% (dark, few) → 65% (bright, many)
+            // HSL: hue=15 (reddish-brown/terra cotta), saturation=65%
+            // Lightness: 25% (dark, few) → 60% (bright, many)
             const ratio = count / max;
-            const lightness = 25 + (ratio * 40);
-            return `hsl(155, 70%, ${lightness}%)`;
+            const lightness = 25 + (ratio * 35);
+            return `hsl(15, 65%, ${lightness}%)`;
         }
 
         function getHeatmapOpacity(count, max) {
@@ -621,12 +622,20 @@
             return 0.15 + (ratio * 0.25);
         }
 
+        // Store color metadata for each kecamatan
+        const layerColorData = {};
+
         kecamatansWithBoundary.forEach(kecamatan => {
             if (kecamatan.boundary_geojson) {
                 try {
                     const geojson = JSON.parse(kecamatan.boundary_geojson);
-                    const color = getHeatmapColor(kecamatan.wisata_count, maxWisata);
-                    const baseFillOpacity = getHeatmapOpacity(kecamatan.wisata_count, maxWisata);
+                    const heatmapColor = getHeatmapColor(kecamatan.wisata_count, maxWisata);
+                    const heatmapOpacity = getHeatmapOpacity(kecamatan.wisata_count, maxWisata);
+                    const cmsColor = kecamatan.color || '#10b981';
+
+                    // Start with heatmap mode
+                    const color = heatmapColor;
+                    const baseFillOpacity = heatmapOpacity;
 
                     const layer = L.geoJSON(geojson, {
                         style: {
@@ -671,15 +680,15 @@
                                         </div>
                                     </div>
                                     ${kecamatan.wisata_count > 0 ? `
-                                                    <div style="margin-top:8px;">
-                                                        <p style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 4px 0;">Destinasi Wisata</p>
-                                                        ${wisataListHtml}
-                                                    </div>
-                                                ` : `
-                                                    <div style="text-align:center;padding:12px 0 4px;">
-                                                        <p style="font-size:12px;color:#9ca3af;margin:0;">Belum ada data wisata</p>
-                                                    </div>
-                                                `}
+                                                            <div style="margin-top:8px;">
+                                                                <p style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 4px 0;">Destinasi Wisata</p>
+                                                                ${wisataListHtml}
+                                                            </div>
+                                                        ` : `
+                                                            <div style="text-align:center;padding:12px 0 4px;">
+                                                                <p style="font-size:12px;color:#9ca3af;margin:0;">Belum ada data wisata</p>
+                                                            </div>
+                                                        `}
                                 </div>
                             `, {
                                 className: 'kecamatan-popup',
@@ -688,16 +697,22 @@
 
                             // Hover effect
                             layer.on('mouseover', function(e) {
+                                const data = layerColorData[kecamatan.id];
+                                const currentOpacity = isHeatmapMode ? data.heatmapOpacity :
+                                    0.15;
                                 this.setStyle({
                                     weight: 3,
-                                    fillOpacity: Math.min(baseFillOpacity + 0.15, 0.6)
+                                    fillOpacity: Math.min(currentOpacity + 0.15, 0.6)
                                 });
                             });
 
                             layer.on('mouseout', function(e) {
+                                const data = layerColorData[kecamatan.id];
+                                const currentOpacity = isHeatmapMode ? data.heatmapOpacity :
+                                    0.15;
                                 this.setStyle({
                                     weight: 2,
-                                    fillOpacity: baseFillOpacity
+                                    fillOpacity: currentOpacity
                                 });
                             });
 
@@ -719,6 +734,11 @@
                     }).addTo(map);
 
                     boundaryLayers[kecamatan.id] = layer;
+                    layerColorData[kecamatan.id] = {
+                        heatmapColor,
+                        heatmapOpacity,
+                        cmsColor
+                    };
                 } catch (error) {
                     console.error('Error parsing GeoJSON for', kecamatan.name, error);
                 }
@@ -738,11 +758,11 @@
                 <div style="display:flex;align-items:center;gap:8px;">
                     <span style="font-size:10px;color:#6b7280;">Sedikit</span>
                     <div style="display:flex;height:12px;border-radius:6px;overflow:hidden;flex:1;min-width:100px;">
-                        <div style="flex:1;background:hsl(155,70%,25%);"></div>
-                        <div style="flex:1;background:hsl(155,70%,35%);"></div>
-                        <div style="flex:1;background:hsl(155,70%,45%);"></div>
-                        <div style="flex:1;background:hsl(155,70%,55%);"></div>
-                        <div style="flex:1;background:hsl(155,70%,65%);"></div>
+                        <div style="flex:1;background:hsl(15,65%,25%);"></div>
+                        <div style="flex:1;background:hsl(15,65%,33%);"></div>
+                        <div style="flex:1;background:hsl(15,65%,41%);"></div>
+                        <div style="flex:1;background:hsl(15,65%,49%);"></div>
+                        <div style="flex:1;background:hsl(15,65%,60%);"></div>
                     </div>
                     <span style="font-size:10px;color:#6b7280;">Banyak</span>
                 </div>
@@ -750,6 +770,70 @@
             return div;
         };
         legend.addTo(map);
+
+        // Toggle Heatmap / CMS Color Control
+        const colorToggle = L.control({
+            position: 'topleft'
+        });
+        colorToggle.onAdd = function(map) {
+            const div = L.DomUtil.create('div', '');
+            div.style.cssText =
+                'background:white;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.15);font-family:system-ui,-apple-system,sans-serif;overflow:hidden;';
+            div.innerHTML = `
+                <button id="colorToggleBtn" style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:none;background:white;cursor:pointer;font-size:12px;font-weight:600;color:#374151;white-space:nowrap;transition:background 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='white'">
+                    <svg id="toggleIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                    </svg>
+                    <span id="toggleLabel">Mode: Heatmap</span>
+                </button>
+            `;
+
+            // Prevent map interaction when clicking button
+            L.DomEvent.disableClickPropagation(div);
+            L.DomEvent.disableScrollPropagation(div);
+
+            return div;
+        };
+        colorToggle.addTo(map);
+
+        // Toggle function
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#colorToggleBtn')) {
+                isHeatmapMode = !isHeatmapMode;
+                const label = document.getElementById('toggleLabel');
+                label.textContent = isHeatmapMode ? 'Mode: Heatmap' : 'Mode: Warna Kecamatan';
+
+                // Update all polygon styles
+                Object.keys(boundaryLayers).forEach(id => {
+                    const layer = boundaryLayers[id];
+                    const data = layerColorData[id];
+
+                    if (isHeatmapMode) {
+                        layer.setStyle({
+                            color: data.heatmapColor,
+                            fillColor: data.heatmapColor,
+                            fillOpacity: data.heatmapOpacity,
+                            weight: 2,
+                            opacity: 0.8
+                        });
+                    } else {
+                        layer.setStyle({
+                            color: data.cmsColor,
+                            fillColor: data.cmsColor,
+                            fillOpacity: 0.15,
+                            weight: 2,
+                            opacity: 0.8
+                        });
+                    }
+                });
+
+                // Toggle legend
+                const legendContainer = legend.getContainer();
+                if (legendContainer) {
+                    legendContainer.style.display = isHeatmapMode ? 'block' : 'none';
+                }
+            }
+        });
 
         // Custom icon with gradient
         const customIcon = L.divIcon({
