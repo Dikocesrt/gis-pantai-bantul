@@ -610,16 +610,16 @@
 
         function getHeatmapColor(count, max) {
             // HSL: hue=15 (reddish-brown/terra cotta), saturation=65%
-            // Lightness: 25% (dark, few) → 60% (bright, many)
+            // Lightness: 60% (bright, few) → 25% (dark, many)
             const ratio = count / max;
-            const lightness = 25 + (ratio * 35);
+            const lightness = 60 - (ratio * 35);
             return `hsl(15, 65%, ${lightness}%)`;
         }
 
         function getHeatmapOpacity(count, max) {
-            // Fill opacity: 0.15 (few) → 0.40 (many)
+            // Fill opacity: 0.12 (few) → 0.40 (many)
             const ratio = count / max;
-            return 0.15 + (ratio * 0.25);
+            return 0.12 + (ratio * 0.28);
         }
 
         // Store color metadata for each kecamatan
@@ -680,15 +680,15 @@
                                         </div>
                                     </div>
                                     ${kecamatan.wisata_count > 0 ? `
-                                                            <div style="margin-top:8px;">
-                                                                <p style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 4px 0;">Destinasi Wisata</p>
-                                                                ${wisataListHtml}
-                                                            </div>
-                                                        ` : `
-                                                            <div style="text-align:center;padding:12px 0 4px;">
-                                                                <p style="font-size:12px;color:#9ca3af;margin:0;">Belum ada data wisata</p>
-                                                            </div>
-                                                        `}
+                                                                <div style="margin-top:8px;">
+                                                                    <p style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 4px 0;">Destinasi Wisata</p>
+                                                                    ${wisataListHtml}
+                                                                </div>
+                                                            ` : `
+                                                                <div style="text-align:center;padding:12px 0 4px;">
+                                                                    <p style="font-size:12px;color:#9ca3af;margin:0;">Belum ada data wisata</p>
+                                                                </div>
+                                                            `}
                                 </div>
                             `, {
                                 className: 'kecamatan-popup',
@@ -758,11 +758,11 @@
                 <div style="display:flex;align-items:center;gap:8px;">
                     <span style="font-size:10px;color:#6b7280;">Sedikit</span>
                     <div style="display:flex;height:12px;border-radius:6px;overflow:hidden;flex:1;min-width:100px;">
-                        <div style="flex:1;background:hsl(15,65%,25%);"></div>
-                        <div style="flex:1;background:hsl(15,65%,33%);"></div>
-                        <div style="flex:1;background:hsl(15,65%,41%);"></div>
-                        <div style="flex:1;background:hsl(15,65%,49%);"></div>
                         <div style="flex:1;background:hsl(15,65%,60%);"></div>
+                        <div style="flex:1;background:hsl(15,65%,49%);"></div>
+                        <div style="flex:1;background:hsl(15,65%,41%);"></div>
+                        <div style="flex:1;background:hsl(15,65%,33%);"></div>
+                        <div style="flex:1;background:hsl(15,65%,25%);"></div>
                     </div>
                     <span style="font-size:10px;color:#6b7280;">Banyak</span>
                 </div>
